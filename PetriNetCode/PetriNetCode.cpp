@@ -9,6 +9,7 @@
 
 #include "Transition_Abstract.h"
 #include "Transition_Stochastic.h"
+#include "Transition_Deterministic.h"
 
 int main()
 {
@@ -37,11 +38,16 @@ int main()
 
 	Transition_Stochastic* T_Test;
 	T_Test = new Transition_Stochastic("test", 1, 1, 1, 'E', 1, {1.67});
+	Transition_Deterministic* T_Test_1;
+	//T_Test_1 = new Transition_Deterministic();
 
 	vector<Transition_Abstract* >* test_vector;
 	test_vector = new vector<Transition_Abstract*>[2];
 
 	test_vector->push_back(T_Test);
+	//test_vector->push_back(T_Test_1);
+
+
 
 	delete T_Test;
 

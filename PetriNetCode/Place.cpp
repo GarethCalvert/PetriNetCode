@@ -55,7 +55,7 @@ string Place::Get_Place_Name()
 //=======================================================================
 // Accessor to Place Marking
 //=======================================================================
-int Place::Get_Place_Marking()
+unsigned int Place::Get_Place_Marking()
 {
 	return mCurrentTokenCount;
 }

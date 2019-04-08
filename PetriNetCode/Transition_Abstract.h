@@ -11,10 +11,13 @@ using namespace std;
 class Transition_Abstract
 {
 	public:
-		// Virtual functions that are required for derived classes
-		virtual void Transition_Fire() = 0;
+		// Pure Virtual functions that are required for derived classes
+		
 		virtual void Transition_Resample() = 0;
-		virtual void Transition_Enabled_Check() = 0;
+
+		// Virtual functions that are defined but can be overridden by derived classes
+		virtual void Transition_Fire();
+		virtual void Transition_Enabled_Check(double GlobalTime);
 
 		// Public functions common to all derived transition classes
 		void Set_Input_Place_Vector(vector<Place*> InputPlaces, vector<unsigned int> InputWeights);
@@ -44,4 +47,9 @@ class Transition_Abstract
 		double mTransitionDelay;
 		bool mTransitionEnabled;
 		bool mTransitionInhibited;
+
+		// Timing variables
+		double mCumulativeTime;
+		double mRemainingDelay;
+		double mEnabledTime;
 };

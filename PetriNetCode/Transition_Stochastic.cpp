@@ -36,9 +36,6 @@ Transition_Stochastic::Transition_Stochastic(string TransitionName, unsigned int
 
 	mTransitionEnabled = 0.0;
 
-
-
-	cout << "This has constructed a stochastic transition: " << mTransitionName << endl;
 }
 
 //=======================================================================
@@ -52,25 +49,6 @@ Transition_Stochastic::~Transition_Stochastic()
 	delete[] mpInputWeights;
 	delete[] mpOutputWeights;
 	delete[] mpInhibitorWeights;
-}
-
-//=======================================================================
-// Fires the transition - This is a required definition for a virtual 
-// function from the abstract class
-//=======================================================================
-void Transition_Stochastic::Transition_Fire()
-{
-	// Remove Tokens from Input Places
-	for (unsigned int i = 0; i < mNumberInputPlaces; i++)
-	{
-		mpInputPlaces->at(i)->Remove_Tokens(mpInputWeights->at(i));
-	}
-
-	// Add Tokens to Output Places
-	for (unsigned int i = 0; i < mNumberOutputPlaces; i++)
-	{
-		mpOutputPlaces->at(i)->Add_Tokens(mpOutputWeights->at(i));
-	}
 }
 
 //=======================================================================
@@ -105,7 +83,7 @@ void Transition_Stochastic::Transition_Resample()
 //=======================================================================
 void Transition_Stochastic::Transition_Enabled_Check()
 {
-	cout << "Transition Fires";
+	
 }
 
 //=======================================================================

@@ -11,7 +11,6 @@ public:
 	~Transition_Stochastic();
 
 	// Virtual functions from Transition_Abstract that require a definition
-	void Transition_Fire();
 	void Transition_Resample();
 	void Transition_Enabled_Check();
 
@@ -19,10 +18,7 @@ public:
 	void Set_Distribution_Parameters(char DistributionCode, unsigned int NumberParameters, vector<double> Parameters);
 
 private:
-	// Timing variables
-	double mCumulativeTime;
-	double mRemainingDelay;
-	double mEnabledTime;
+	
 
 	// Distribution Variables
 	char mDistributionCode;

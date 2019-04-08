@@ -4,8 +4,29 @@
 //=======================================================================
 // Specialised Constructor
 //=======================================================================
-Transition_Deterministic::Transition_Deterministic()
+Transition_Deterministic::Transition_Deterministic(string TransitionName, unsigned int NumberIn, unsigned NumberOut, unsigned NumberInhibitorArcs, double Transition_Firing_Delay)
 {
+	// Transition Properties
+	mTransitionName = TransitionName;
+	mNumberInputPlaces = NumberIn;
+	mNumberOutputPlaces = NumberOut;
+	mNumberInhibitorArcs = NumberInhibitorArcs;
+
+	// Initalising Arrays 
+	mpInputPlaces = new vector<Place*>[mNumberInputPlaces];
+	mpOutputPlaces = new vector<Place*>[mNumberOutputPlaces];
+	mpInhibitorPlaces = new vector<Place*>[mNumberInhibitorArcs];
+	mpInputWeights = new vector<unsigned int>[mNumberInputPlaces];
+	mpOutputWeights = new vector<unsigned int>[mNumberOutputPlaces];
+	mpInhibitorWeights = new vector<unsigned int>[mNumberInhibitorArcs];
+
+	// Reset of timing variables
+	mTransitionEnabled = false;
+	mTransitionInhibited = false;
+	mCumulativeTime = 0.0;
+	mTransitionDelay = Transition_Firing_Delay;
+	mRemainingDelay = mTransitionDelay;
+	
 }
 
 //=======================================================================
@@ -21,23 +42,6 @@ Transition_Deterministic::~Transition_Deterministic()
 	delete[] mpInhibitorWeights;
 }
 
-//=======================================================================
-// Fires the transition when executed
-//=======================================================================
-void Transition_Deterministic::Transition_Fire()
-{
-	// Remove Tokens from Input Places
-	for (unsigned int i = 0; i < mNumberInputPlaces; i++)
-	{
-		mpInputPlaces->at(i)->Remove_Tokens(mpInputWeights->at(i));
-	}
-
-	// Add Tokens to Output Places
-	for (unsigned int i = 0; i < mNumberOutputPlaces; i++)
-	{
-		mpOutputPlaces->at(i)->Add_Tokens(mpOutputWeights->at(i));
-	}
-}
 
 //=======================================================================
 // Resamples transition delay - required from Transition_Abstract
@@ -48,14 +52,6 @@ void Transition_Deterministic::Transition_Resample()
 	// This should do nothing
 }
 
-//=======================================================================
-// Function used to assess if the marking of the input places mean that 
-// the transition is enabled.
-//=======================================================================
-void Transition_Deterministic::Transition_Enabled_Check()
-{
-
-}
 
 //=======================================================================
 // Used to change/update the firing time of the deterministic transition

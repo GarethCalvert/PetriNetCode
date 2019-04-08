@@ -22,14 +22,14 @@ public:
 
 	// Accessor Functions
 	string Get_Place_Name();
-	int Get_Place_Marking();
+	unsigned int Get_Place_Marking();
 
 
 private:
 
 	// Private members
 	string mPlaceName;
-	int mInitialTokenCount;
-	int mCurrentTokenCount;
+	unsigned int mInitialTokenCount;
+	unsigned int mCurrentTokenCount;
 };
 
