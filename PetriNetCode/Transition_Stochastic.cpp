@@ -61,13 +61,13 @@ Transition_Stochastic::~Transition_Stochastic()
 void Transition_Stochastic::Transition_Fire()
 {
 	// Remove Tokens from Input Places
-	for (int i = 0; i < mNumberInputPlaces; i++)
+	for (unsigned int i = 0; i < mNumberInputPlaces; i++)
 	{
 		mpInputPlaces->at(i)->Remove_Tokens(mpInputWeights->at(i));
 	}
 
 	// Add Tokens to Output Places
-	for (int i = 0; i < mNumberOutputPlaces; i++)
+	for (unsigned int i = 0; i < mNumberOutputPlaces; i++)
 	{
 		mpOutputPlaces->at(i)->Add_Tokens(mpOutputWeights->at(i));
 	}

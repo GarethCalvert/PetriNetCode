@@ -27,13 +27,13 @@ Transition_Deterministic::~Transition_Deterministic()
 void Transition_Deterministic::Transition_Fire()
 {
 	// Remove Tokens from Input Places
-	for (int i = 0; i < mNumberInputPlaces; i++)
+	for (unsigned int i = 0; i < mNumberInputPlaces; i++)
 	{
 		mpInputPlaces->at(i)->Remove_Tokens(mpInputWeights->at(i));
 	}
 
 	// Add Tokens to Output Places
-	for (int i = 0; i < mNumberOutputPlaces; i++)
+	for (unsigned int i = 0; i < mNumberOutputPlaces; i++)
 	{
 		mpOutputPlaces->at(i)->Add_Tokens(mpOutputWeights->at(i));
 	}
@@ -62,6 +62,6 @@ void Transition_Deterministic::Transition_Enabled_Check()
 //=======================================================================
 void Transition_Deterministic::Set_Transition_Delay(double TransitionDelay)
 {
-	assert(FiringTime >= 0);
+	assert(TransitionDelay >= 0);
 	mTransitionDelay = TransitionDelay;
 }
