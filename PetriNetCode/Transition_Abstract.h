@@ -1,18 +1,22 @@
+//=======================================================================
+// Gareth Calvert - University of Nottingham
+// Transition_Abstract.h - Abstract Transition header file for class 
+// providing an interface for all derived transition classes
+//=======================================================================
 #include <vector>
 #include <cmath>
 #include <iostream>
+#include <random>
 #include <cassert>
 #include "Place.h"
-
 using namespace std;
-
+//=======================================================================
 #pragma once
 
 class Transition_Abstract
 {
 	public:
 		// Pure Virtual functions that are required for derived classes
-		
 		virtual void Transition_Resample() = 0;
 
 		// Virtual functions that are defined but can be overridden by derived classes
@@ -28,8 +32,7 @@ class Transition_Abstract
 		void Set_Inhibitor_Arc(Place* InhibitorPlace, unsigned int InhibitorWeight);
 		string Get_Transition_Name();
 		bool Get_Enabled_Status();
-		
-
+		double Get_Uniform_Distributed_Random_Number();
 
 	protected:
 		// Transition member variables
@@ -44,12 +47,11 @@ class Transition_Abstract
 		vector<unsigned int>* mpOutputWeights;
 		vector<unsigned int>* mpInhibitorWeights;
 
-		double mTransitionDelay;
-		bool mTransitionEnabled;
-		bool mTransitionInhibited;
-
 		// Timing variables
 		double mCumulativeTime;
 		double mRemainingDelay;
 		double mEnabledTime;
+		double mTransitionDelay;
+		bool mTransitionEnabled;
+		bool mTransitionInhibited;
 };

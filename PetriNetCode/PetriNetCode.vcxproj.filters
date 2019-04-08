@@ -21,9 +21,6 @@
     <ClInclude Include="Place.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Transition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Transition_Abstract.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -33,18 +30,24 @@
     <ClInclude Include="Transition_Deterministic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Petri_Net_Abstract.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Petri_Net_Custom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Transition_Reset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PetriNetCode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Place.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Transition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Transition_Abstract.cpp">
@@ -54,6 +57,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Transition_Deterministic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Petri_Net_Abstract.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Petri_Net_Custom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Transition_Reset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

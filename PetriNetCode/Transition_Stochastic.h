@@ -12,14 +12,11 @@ public:
 
 	// Virtual functions from Transition_Abstract that require a definition
 	void Transition_Resample();
-	void Transition_Enabled_Check();
 
 	// Public Functions specific to Transition_Stochastic
 	void Set_Distribution_Parameters(char DistributionCode, unsigned int NumberParameters, vector<double> Parameters);
 
 private:
-	
-
 	// Distribution Variables
 	char mDistributionCode;
 	unsigned int mNumberParameters;

@@ -5,26 +5,26 @@
 //=======================================================================
 #include "pch.h"
 #include "Transition_Stochastic.h"
-
 using namespace std;
+//=======================================================================
+
 
 //=======================================================================
 // Specialised Constructor
 //=======================================================================
 Transition_Stochastic::Transition_Stochastic(string TransitionName, unsigned int NumberIn, unsigned NumberOut, unsigned NumberInhibitorArcs, char DistributionCode, unsigned int NumberParameters, vector<double> Parameters)
 {
+	// Transition Properties
 	mTransitionName = TransitionName;
 	mNumberInputPlaces = NumberIn;
 	mNumberOutputPlaces = NumberOut;
 	mNumberInhibitorArcs = NumberInhibitorArcs;
 
+	// Properties of the probability distribution for sampling times
 	mDistributionCode = DistributionCode;
 	mNumberParameters = NumberParameters;
 	mpParameters = new vector<double>[mNumberParameters];
 	*mpParameters = Parameters;
-
-	mTransitionEnabled = false;
-	mTransitionInhibited = false;
 
 	// Initalising Arrays 
 	mpInputPlaces = new vector<Place*>[mNumberInputPlaces];
@@ -34,7 +34,12 @@ Transition_Stochastic::Transition_Stochastic(string TransitionName, unsigned int
 	mpOutputWeights = new vector<unsigned int>[mNumberOutputPlaces];
 	mpInhibitorWeights = new vector<unsigned int>[mNumberInhibitorArcs];
 
-	mTransitionEnabled = 0.0;
+	// Reset of timing variables
+	mTransitionEnabled = false;
+	mTransitionInhibited = false;
+	mCumulativeTime = 0.0;
+	Transition_Resample();
+	mRemainingDelay = mTransitionDelay;
 
 }
 
@@ -57,33 +62,20 @@ Transition_Stochastic::~Transition_Stochastic()
 //=======================================================================
 void Transition_Stochastic::Transition_Resample()
 {
-	// This needs to be made random
-	double randNum;
-	randNum = 0.5;
-
 	if (mDistributionCode == 'E')
 	{
 		double alpha;
 		alpha = mpParameters->at(0);
-		mTransitionDelay = -1 * alpha*log(randNum);
+		mTransitionDelay = -1 * alpha*log(Get_Uniform_Distributed_Random_Number());
 	}
 	else if (mDistributionCode == 'W')
 	{
 		double alpha, beta;
 		alpha = mpParameters->at(0);
 		beta = mpParameters->at(1);
-		mTransitionDelay = alpha * pow((-1 * log(randNum)), (1 / beta));
+		mTransitionDelay = alpha * pow((-1 * log(Get_Uniform_Distributed_Random_Number())), (1 / beta));
 	}
 
-}
-
-//=======================================================================
-// Checks if the transition is enabled because of the marking of its 
-// input places
-//=======================================================================
-void Transition_Stochastic::Transition_Enabled_Check()
-{
-	
 }
 
 //=======================================================================

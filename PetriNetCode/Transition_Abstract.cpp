@@ -172,3 +172,19 @@ void Transition_Abstract::Transition_Enabled_Check(double GlobalTime)
 		mRemainingDelay = mTransitionDelay;
 	}
 }
+
+//=======================================================================
+// Function to get a random number
+//=======================================================================
+double Transition_Abstract::Get_Uniform_Distributed_Random_Number()
+{
+	// std::random_device is a uniformly-distributed integer random number generator that produces non-deterministic random numbers.
+	std::random_device rd;
+
+	// A Mersenne Twister pseudo-random generator of 32-bit numbers with a state size of 19937 bits.
+	std::mt19937_64 gen(rd());
+
+	std::uniform_real_distribution<> d(0.0, 1.0);
+
+	return d(gen);
+}

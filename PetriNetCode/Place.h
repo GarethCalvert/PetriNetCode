@@ -4,7 +4,6 @@
 using namespace std;
 #pragma once
 
-
 class Place
 {
 public:
@@ -23,7 +22,6 @@ public:
 	// Accessor Functions
 	string Get_Place_Name();
 	unsigned int Get_Place_Marking();
-
 
 private:
 
