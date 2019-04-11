@@ -11,7 +11,7 @@
 //=======================================================================
 // Set vector containing all the input places for the transition
 //=======================================================================
-void Transition_Abstract::Set_Input_Place_Vector(std::vector<Place*> InputPlaces, std::vector<unsigned int> InputWeights)
+void Transition_Abstract::Set_Input_Arcs_Vector(std::vector<Place*> InputPlaces, std::vector<unsigned int> InputWeights)
 {
 	*mpInputPlaces = InputPlaces;
 	*mpInputWeights = InputWeights;
@@ -20,7 +20,7 @@ void Transition_Abstract::Set_Input_Place_Vector(std::vector<Place*> InputPlaces
 //=======================================================================
 // Set vector containing all the output places for the transition
 //=======================================================================
-void Transition_Abstract::Set_Output_Place_Vector(std::vector<Place*> OutputPlaces, std::vector<unsigned int> OutputWeights)
+void Transition_Abstract::Set_Output_Arcs_Vector(std::vector<Place*> OutputPlaces, std::vector<unsigned int> OutputWeights)
 {
 	*mpOutputPlaces = OutputPlaces;
 	*mpOutputWeights = OutputWeights;
@@ -38,7 +38,7 @@ void Transition_Abstract::Set_Inhibitor_Arcs_Vector(vector<Place*> InhibitorPlac
 //=======================================================================
 // Add an input place to the input place vector for the transition
 //=======================================================================
-void Transition_Abstract::Set_Input_Place(Place *InputPlace, unsigned int InputWeight)
+void Transition_Abstract::Set_Input_Arc(Place *InputPlace, unsigned int InputWeight)
 {
 	mpInputPlaces->push_back(&*InputPlace);
 	mpInputWeights->push_back(InputWeight);
@@ -47,7 +47,7 @@ void Transition_Abstract::Set_Input_Place(Place *InputPlace, unsigned int InputW
 //=======================================================================
 // Add an ouput place to the input place vector for the transition
 //=======================================================================
-void Transition_Abstract::Set_Output_Place(Place *OutputPlace, unsigned int OutputWeight)
+void Transition_Abstract::Set_Output_Arc(Place *OutputPlace, unsigned int OutputWeight)
 {
 	mpOutputPlaces->push_back(&*OutputPlace);
 	mpOutputWeights->push_back(OutputWeight);
@@ -85,13 +85,13 @@ bool Transition_Abstract::Get_Enabled_Status()
 void Transition_Abstract::Transition_Fire()
 {
 	// Remove Tokens from Input Places
-	for (unsigned int i = 0; i < mNumberInputPlaces; i++)
+	for (unsigned int i = 0; i < mNumberInputArcs; i++)
 	{
 		mpInputPlaces->at(i)->Remove_Tokens(mpInputWeights->at(i));
 	}
 
 	// Add Tokens to Output Places
-	for (unsigned int i = 0; i < mNumberOutputPlaces; i++)
+	for (unsigned int i = 0; i < mNumberOutputArcs; i++)
 	{
 		mpOutputPlaces->at(i)->Add_Tokens(mpOutputWeights->at(i));
 	}
@@ -122,7 +122,7 @@ void Transition_Abstract::Transition_Enabled_Check(double GlobalTime)
 	// If Transition is already enabled check that it still is
 	if (mTransitionEnabled == true && mTransitionInhibited == false)
 	{
-		for (unsigned int i = 0; i < mNumberInputPlaces; i++)
+		for (unsigned int i = 0; i < mNumberInputArcs; i++)
 		{
 			if (Enabled_Test == true)
 			{
@@ -152,7 +152,7 @@ void Transition_Abstract::Transition_Enabled_Check(double GlobalTime)
 	// If transition is not already, and it is not inhibited then check if it is
 	if (Enabled_Test == true)
 	{
-		for (unsigned int i = 0; i < mNumberInputPlaces; i++)
+		for (unsigned int i = 0; i < mNumberInputArcs; i++)
 		{
 			if (Enabled_Test == true)
 			{

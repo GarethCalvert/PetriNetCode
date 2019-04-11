@@ -16,8 +16,8 @@ Transition_Stochastic::Transition_Stochastic(string TransitionName, unsigned int
 {
 	// Transition Properties
 	mTransitionName = TransitionName;
-	mNumberInputPlaces = NumberIn;
-	mNumberOutputPlaces = NumberOut;
+	mNumberInputArcs = NumberIn;
+	mNumberOutputArcs = NumberOut;
 	mNumberInhibitorArcs = NumberInhibitorArcs;
 
 	// Properties of the probability distribution for sampling times
@@ -27,11 +27,11 @@ Transition_Stochastic::Transition_Stochastic(string TransitionName, unsigned int
 	*mpParameters = Parameters;
 
 	// Initalising Arrays 
-	mpInputPlaces = new vector<Place*>[mNumberInputPlaces];
-	mpOutputPlaces = new vector<Place*>[mNumberOutputPlaces];
+	mpInputPlaces = new vector<Place*>[mNumberInputArcs];
+	mpOutputPlaces = new vector<Place*>[mNumberOutputArcs];
 	mpInhibitorPlaces = new vector<Place*>[mNumberInhibitorArcs];
-	mpInputWeights = new vector<unsigned int>[mNumberInputPlaces];
-	mpOutputWeights = new vector<unsigned int>[mNumberOutputPlaces];
+	mpInputWeights = new vector<unsigned int>[mNumberInputArcs];
+	mpOutputWeights = new vector<unsigned int>[mNumberOutputArcs];
 	mpInhibitorWeights = new vector<unsigned int>[mNumberInhibitorArcs];
 
 	// Reset of timing variables

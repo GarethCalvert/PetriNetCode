@@ -7,6 +7,7 @@
 #include "Transition_Abstract.h"
 #include "Transition_Stochastic.h"
 #include "Transition_Deterministic.h"
+#include "Transition_Reset.h"
 //=======================================================================
 #include <iostream>
 #include <iomanip>
@@ -25,12 +26,22 @@ public:
 	// Default Initialise function
 	void Initialise();
 
+	vector<vector<int> > Read_Places_Details_Input();
+	vector<vector<int> > Read_Transition_Details_Input();
+	vector<vector<int> > Read_Arcs_Input();
+	
+	void Create_Places_Vector();
+	void Create_Transitions_Vector();
+	void Assign_Arcs();
+
 	//====================================
 	// Functions to print to console
 	//====================================
 	void PrintHeader();
 	void PrintFooter();
 	void PrintIteration();
+	void Print_Token_Marking();
+
 
 	//====================================
 	// Simulation Functions
@@ -40,7 +51,7 @@ public:
 	//====================================
 	// Marking Functions
 	//====================================
-	//void PrintTokenMarking();
+	//
 	//void RecordTokenMarking();
 	//void SaveTokenMarking();
 
@@ -69,8 +80,8 @@ protected:
 
 	// PN Properties
 	string mPetriNetName;
-	double mNumberPlaces;
-	double mNumberTransitions;
+	int mNumberPlaces;
+	int mNumberTransitions;
 
 	// Time Properties
 	double mInitialTime;

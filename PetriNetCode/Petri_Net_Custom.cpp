@@ -8,18 +8,14 @@
 //=======================================================================
 // Specialised Constructor
 //=======================================================================
-Petri_Net_Custom::Petri_Net_Custom(std::string PetriNetName, int NumberPlaces, int NumberTransitions,
-	std::vector<Place*>* Places, std::vector<Transition_Abstract*>* Transitions, double InitialTime,
-	double FinalTime)
+Petri_Net_Custom::Petri_Net_Custom(std::string PetriNetName, double InitialTime, double FinalTime)
 {
 	mPetriNetName = PetriNetName;
-	mNumberPlaces = NumberPlaces;
-	mNumberTransitions = NumberTransitions;
-	mpPlaces = &*Places;
-	mpTransitions = &*Transitions;
 	mInitialTime = InitialTime;
 	mFinalTime = FinalTime;
-	
+	Create_Places_Vector();
+	Create_Transitions_Vector();
+
 }
 
 //=======================================================================

@@ -4,53 +4,66 @@
 //=======================================================================
 #include "pch.h"
 #include <iostream>
+#include <cassert>
+#include <fstream>
 //=======================================================================
 #include "Petri_Net_Abstract.h"
+#include "Petri_Net_Custom.h"
 #include "Place.h"
 #include "Transition_Abstract.h"
 #include "Transition_Stochastic.h"
 #include "Transition_Deterministic.h"
-#include "Functions.h"
 //=======================================================================
 int main()
 {
     std::cout << "PN Code - Gareth Calvert \n"; 
 
-	Place* Place1;
-	Place* Place2;
-	Place1 = new Place("P1", 1);
-	Place2 = new Place("P2", 0);
+	//Petri_Net_Custom
+	Petri_Net_Custom* PN_Test;
+	PN_Test = new Petri_Net_Custom("Test Petri Net", 0, 100);
 
-	Place1->Print_Place_Marking();
-	Place2->Print_Place_Marking();
+	PN_Test->Print_Token_Marking();
+	
+	
+	/*
+	// T1
+	Transitions->at(0)->Set_Input_Arc(Places->at(0), 2);
+	Transitions->at(0)->Set_Output_Arc(Places->at(1), 1);
+	Transitions->at(0)->Set_Output_Arc(Places->at(5), 1);
+	Transitions->at(0)->Set_Inhibitor_Arc(Places->at(5), 1);
+	// T2
+	Transitions->at(1)->Set_Input_Arc(Places->at(1), 1);
+	Transitions->at(1)->Set_Output_Arc(Places->at(2), 1);
+	// T3
+	Transitions->at(2)->Set_Input_Arc(Places->at(2), 1);
+	Transitions->at(2)->Set_Output_Arc(Places->at(3), 1);
+	// T4
+	Transitions->at(3)->Set_Input_Arc(Places->at(3), 1);
+	Transitions->at(3)->Set_Output_Arc(Places->at(4), 1);
 
-	Transition_Deterministic* Transition1;
-	Transition1 = new Transition_Deterministic("T1", 1, 1, 0, 0);
-
-	Transition1->Set_Input_Place(Place1, 1);
-	Transition1->Set_Output_Place(Place2, 1);
-
-	Transition1->Transition_Fire();
-
-	Place1->Print_Place_Marking();
-	Place2->Print_Place_Marking();
 
 
-	Transition_Stochastic* T_Test;
-	T_Test = new Transition_Stochastic("test", 1, 1, 1, 'E', 1, {1.67});
-	//Transition_Deterministic* T_Test_1;
-	//T_Test_1 = new Transition_Deterministic();
+	// Mock Simulation
+	Transitions->at(0)->Transition_Fire();
+	Transitions->at(1)->Transition_Fire();
 
-	vector<Transition_Abstract* >* test_vector;
-	test_vector = new vector<Transition_Abstract*>[2];
 
-	test_vector->push_back(T_Test);
-	test_vector->push_back(new Transition_Stochastic("test", 1, 1, 1, 'E', 1, { 1.67 }));
+	for (unsigned int i = 0; i < NumberPlaces; i++)
+	{
+		Places->at(i)->Print_Place_Marking();
+	}
 
-	delete T_Test;
+	vector<vector<int> > Transition_Details;
+	Transition_Details = Read_Transition_Details_Input();
 
-	Net_Design(5,2,0);
+	//============================================================
+	
+	// Delete 2D Array pointers
 
+	// Delete vector pointers
+	delete[] Places;
+	delete[] Transitions;
+	*/
 
 	//================================================
 	// Code requiring user input to end program

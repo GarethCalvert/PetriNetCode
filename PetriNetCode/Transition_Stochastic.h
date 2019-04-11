@@ -22,4 +22,3 @@ private:
 	unsigned int mNumberParameters;
 	vector<double>* mpParameters;
 };
-
