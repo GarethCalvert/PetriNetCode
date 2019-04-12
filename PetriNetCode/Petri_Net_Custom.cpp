@@ -15,6 +15,7 @@ Petri_Net_Custom::Petri_Net_Custom(std::string PetriNetName, double InitialTime,
 	mFinalTime = FinalTime;
 	Create_Places_Vector();
 	Create_Transitions_Vector();
+	Assign_Arcs();
 
 }
 

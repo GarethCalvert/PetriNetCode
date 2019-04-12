@@ -188,3 +188,27 @@ double Transition_Abstract::Get_Uniform_Distributed_Random_Number()
 
 	return d(gen);
 }
+
+//=======================================================================
+// Accessor Function to get number of input arcs
+//=======================================================================
+unsigned int Transition_Abstract::Get_Number_Input_Arcs()
+{
+	return mNumberInputArcs;
+}
+
+//=======================================================================
+// Accessor Function to get number of input arcs
+//=======================================================================
+unsigned int Transition_Abstract::Get_Number_Output_Arcs()
+{
+	return mNumberOutputArcs;
+}
+
+//=======================================================================
+// Accessor Function to get number of input arcs
+//=======================================================================
+unsigned int Transition_Abstract::Get_Number_Inhibitor_Arcs()
+{
+	return mNumberInhibitorArcs;
+}

@@ -1,21 +1,10 @@
 #include "pch.h"
 #include "Petri_Net_Abstract.h"
 
-//====================================
-// Initialise Petri Net
-//====================================
-void Petri_Net_Abstract::Initialise()
-{
-	std::cout << mPetriNetName << " is Initialised." << std::endl;
-	std::cout << "The initial marking of the PN is: " << std::endl;
-	//PrintTokenMarking();
-	PrintFooter();
-}
-
 //================================================
 // Print Header
 //================================================
-void Petri_Net_Abstract::PrintHeader()
+void Petri_Net_Abstract::Print_Header()
 {
 	cout << "=========================================" << endl
 		<< "PN Code - Petri Net Modelling" << endl
@@ -26,7 +15,7 @@ void Petri_Net_Abstract::PrintHeader()
 //================================================
 // Print Footer
 //================================================
-void Petri_Net_Abstract::PrintFooter()
+void Petri_Net_Abstract::Print_Footer()
 {
 	std::cout << "=========================================" << std::endl;
 }
@@ -34,11 +23,11 @@ void Petri_Net_Abstract::PrintFooter()
 //================================================
 // Print Iteration
 //================================================
-void Petri_Net_Abstract::PrintIteration()
+void Petri_Net_Abstract::Print_Iteration()
 {
-	Petri_Net_Abstract::PrintFooter();
+	Petri_Net_Abstract::Print_Footer();
 	cout << "*** Simultation Iteration: " << mSimulationIteration << " ***" << std::endl;
-	Petri_Net_Abstract::PrintFooter();
+	Petri_Net_Abstract::Print_Footer();
 }
 
 //================================================
@@ -46,10 +35,13 @@ void Petri_Net_Abstract::PrintIteration()
 //================================================
 void Petri_Net_Abstract::Print_Token_Marking()
 {
+	cout << "The current marking of " << mPetriNetName << " is: " << endl;
 	for (unsigned int i = 0; i < 6; i++)
 	{
 		mpPlaces->at(i)->Print_Place_Marking();
 	}
+
+	Print_Footer();
 }
 
 //=======================================================================
@@ -111,7 +103,7 @@ vector<vector<int> > Petri_Net_Abstract::Read_Transition_Details_Input()
 // Function read in Transitions Details Input File, returns a 2d vector 
 // containing the transition properties.
 //=======================================================================
-vector<vector<int> > Petri_Net_Abstract::Read_Arcs_Input()
+unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 {
 	//============================================================
 	// Opening the file
@@ -121,16 +113,100 @@ vector<vector<int> > Petri_Net_Abstract::Read_Arcs_Input()
 
 	// Allocating memory for vector
 	vector<int> Initial(5, 0);
-	vector<vector<int> > Arc_Details(mNumberTransitions, Initial);
+	vector<vector<int> > Arc_Details1(mNumberTransitions, Initial);
 
-	// Input data from the file
-	for (int i = 0; i < mNumberTransitions*6; i++)
+	string line;
+	vector<string> InputString;
+	while (getline(myfile, line))
 	{
-		//read_file >> Transition_Details[i][0] >> Transition_Details[i][1] >> Transition_Details[i][2] >> Transition_Details[i][3] >> Transition_Details[i][4];
+		InputString.push_back(line);
+		//cout << line << endl;
 	}
 
-	//read_file.close();
+	myfile.close(); // Close File
+	
+	int Size_InputString = InputString.size();
 
+	assert(Size_InputString == mNumberTransitions*6);
+
+	unsigned int** Arc_Details = new unsigned int* [mNumberTransitions*6];
+
+	int Vector_Index = 0;
+	int n, index;
+
+
+	for (int i = 0; i < mNumberTransitions; i++)
+	{
+		
+		Arc_Details[Vector_Index] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Input_Arcs())+1];
+		Arc_Details[Vector_Index+1] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Input_Arcs())+1];
+		Arc_Details[Vector_Index+2] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Output_Arcs())+1];
+		Arc_Details[Vector_Index+3] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Output_Arcs())+1];
+		Arc_Details[Vector_Index+4] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Output_Arcs())+1];
+		Arc_Details[Vector_Index+5] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Output_Arcs())+1];
+		
+	
+		// First Row is Input Arc Places
+		stringstream stream;
+		stream = stringstream(InputString.at(Vector_Index));
+		index = 0;
+		while (stream >> n) 
+		{
+			//cout << n << endl;
+			Arc_Details[Vector_Index][index] = n;
+			index++;
+		}
+		
+		// Second Row is Input Arc Weights
+		//stringstream* stream;
+		stream = stringstream(InputString.at(Vector_Index+1));
+		index = 0;
+		int n;
+		while (stream >> n)
+		{
+			Arc_Details[Vector_Index+1][index] = n;
+			index++;
+		}
+		
+		// Third Row is Input Arc Weights
+		stream = stringstream(InputString.at(Vector_Index+2));
+		index = 0;
+		while (stream >> n)
+		{
+			Arc_Details[Vector_Index+2][index] = n;
+			index++;
+		}
+
+		// Fourth Row is Input Arc Weights
+		stream = stringstream(InputString.at(Vector_Index+3));
+		index = 0;
+		while (stream >> n)
+		{
+			Arc_Details[Vector_Index+3][index] = n;
+			index++;
+		}
+
+		// Fifth Row is Input Arc Weights
+		stream = stringstream(InputString.at(Vector_Index+4));
+		index = 0;
+		while (stream >> n)
+		{
+			Arc_Details[Vector_Index+4][index] = n;
+			index++;
+		}
+
+		// Sixth Row is Inhibitor Arc Weights
+		stream = stringstream(InputString.at(Vector_Index+5));
+		index = 0;
+		while (stream >> n)
+		{
+			Arc_Details[Vector_Index+5][index] = n;
+			index++;
+		}
+
+		Vector_Index = Vector_Index + 6;
+	
+	}
 	return Arc_Details;
 }
 
@@ -221,7 +297,50 @@ void Petri_Net_Abstract::Create_Transitions_Vector()
 //=======================================================================
 void Petri_Net_Abstract::Assign_Arcs()
 {
+	// Reading in transition details 
+	unsigned int** Arc_Details;
+	Arc_Details = Read_Arcs_Input();
+
+	//cout << Arc_Details[0][1] << endl;
+
+	int inputIndex, inputWeightIndex, outputIndex, outputWeightIndex, inhibIndex, inhibWeightsIndex;
+
+	// Loop to go through each transition and assign the appropriate arcs
+	for (unsigned int i = 0; i<mNumberTransitions; i++)
+	{
+		inputIndex = ((i*6)+ 1)-1; 
+		inputWeightIndex = ((i*6)+ 2)-1;
+		outputIndex = ((i*6)+3)-1;
+		outputWeightIndex = ((i*6)+4)-1;
+		inhibIndex = ((i*6)+5)-1;
+		inhibWeightsIndex = ((i*6)+6)-1;
+
+		// Setting input arcs
+		for (unsigned int a = 0; a<mpTransitions->at(i)->Get_Number_Input_Arcs(); a++)
+		{
+			mpTransitions->at(i)->Set_Input_Arc(mpPlaces->at(Arc_Details[inputIndex][a + 1]-1), Arc_Details[inputWeightIndex][a+1]);
+		}
+
+		// Setting output arcs
+		for (unsigned int a = 0; a<mpTransitions->at(i)->Get_Number_Output_Arcs(); a++)
+		{
+			mpTransitions->at(i)->Set_Output_Arc(mpPlaces->at(Arc_Details[outputIndex][a+1]-1), Arc_Details[outputWeightIndex][a + 1]);
+		}
+
+		// Setting inhibitor arcs
+		for (unsigned int a = 0; a<mpTransitions->at(i)->Get_Number_Inhibitor_Arcs(); a++)
+		{
+			mpTransitions->at(i)->Set_Inhibitor_Arc(mpPlaces->at(Arc_Details[inhibIndex][a+1]-1), Arc_Details[inhibWeightsIndex][a+1]);
+		}
+
+	}
 
 }
 
-
+//=======================================================================
+// Function to conduct once execution of a continuous simulation
+//=======================================================================
+void Petri_Net_Abstract::Continuous_Simulation()
+{
+	cout << "***EMPTY FUNCTION***" << endl;
+}

@@ -30,9 +30,14 @@ class Transition_Abstract
 		void Set_Input_Arc(Place* InputPlace, unsigned int InputWeight);
 		void Set_Output_Arc(Place* OutputPlace, unsigned int OutputWeight);
 		void Set_Inhibitor_Arc(Place* InhibitorPlace, unsigned int InhibitorWeight);
-		string Get_Transition_Name();
 		bool Get_Enabled_Status();
 		double Get_Uniform_Distributed_Random_Number();
+
+		// Accessor Functions
+		string Get_Transition_Name();
+		unsigned int Get_Number_Input_Arcs();
+		unsigned int Get_Number_Output_Arcs();
+		unsigned int Get_Number_Inhibitor_Arcs();
 
 	protected:
 		// Transition member variables

@@ -10,6 +10,7 @@
 #include "Transition_Reset.h"
 //=======================================================================
 #include <iostream>
+#include <cstdio>
 #include <iomanip>
 #include <sstream>
 #include <string>
@@ -23,12 +24,10 @@ using namespace std;
 class Petri_Net_Abstract
 {
 public:
-	// Default Initialise function
-	void Initialise();
 
 	vector<vector<int> > Read_Places_Details_Input();
 	vector<vector<int> > Read_Transition_Details_Input();
-	vector<vector<int> > Read_Arcs_Input();
+	unsigned int** Read_Arcs_Input();
 	
 	void Create_Places_Vector();
 	void Create_Transitions_Vector();
@@ -37,16 +36,15 @@ public:
 	//====================================
 	// Functions to print to console
 	//====================================
-	void PrintHeader();
-	void PrintFooter();
-	void PrintIteration();
+	void Print_Header();
+	void Print_Footer();
+	void Print_Iteration();
 	void Print_Token_Marking();
-
 
 	//====================================
 	// Simulation Functions
 	//====================================
-	//void ContinuousSimulation();
+	void Continuous_Simulation();
 
 	//====================================
 	// Marking Functions
