@@ -1,3 +1,7 @@
+//=======================================================================
+// Gareth Calvert - University of Nottingham
+// Place.h - Place class, used to create instances of Places in a PN
+//=======================================================================
 #include <string>
 #include <iostream>
 #include <cassert>

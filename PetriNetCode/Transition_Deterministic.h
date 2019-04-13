@@ -1,5 +1,12 @@
+//=======================================================================
+// Gareth Calvert - University of Nottingham
+// Transition_Deterministic.cpp - A derived class from the 
+// Transition_Abstract base class. Used for deterministic transitions.
+//=======================================================================
 #pragma once
 #include "Transition_Abstract.h"
+//=======================================================================
+
 class Transition_Deterministic :
 	public Transition_Abstract
 {

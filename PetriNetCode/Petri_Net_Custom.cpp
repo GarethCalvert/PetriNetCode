@@ -1,9 +1,12 @@
 //=======================================================================
 // Gareth Calvert - University of Nottingham
-// PetriNetCode.cpp : This file contains the 'main' function. 
+// Petri_Net_Custom.cpp : Allows access to the Abstract PN Class. 
+// Can be used to read in a PN structure from file.
 //=======================================================================
 #include "pch.h"
 #include "Petri_Net_Custom.h"
+//=======================================================================
+
 
 //=======================================================================
 // Specialised Constructor
@@ -16,7 +19,6 @@ Petri_Net_Custom::Petri_Net_Custom(std::string PetriNetName, double InitialTime,
 	Create_Places_Vector();
 	Create_Transitions_Vector();
 	Assign_Arcs();
-
 }
 
 //=======================================================================

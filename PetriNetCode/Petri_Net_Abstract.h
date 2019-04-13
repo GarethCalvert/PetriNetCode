@@ -1,6 +1,6 @@
 //=======================================================================
 // Gareth Calvert - University of Nottingham
-// Transition_Stochastic.h - Abstract Petri net class for deriving PNs
+// Petri_Net_Abstract.h - Abstract Petri net class for deriving PNs
 //=======================================================================
 #pragma once
 #include "Place.h"

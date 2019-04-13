@@ -16,9 +16,9 @@ using namespace std;
 #include "Transition_Stochastic.h"
 #include "Transition_Deterministic.h"
 //=======================================================================
+
 int main()
 {
-
 	//Petri_Net_Custom
 	Petri_Net_Custom* PN_Test;
 	PN_Test = new Petri_Net_Custom("Test Petri Net", 0, 100);
@@ -27,7 +27,6 @@ int main()
 	PN_Test->Print_Token_Marking();
 	PN_Test->Continuous_Simulation();
 	PN_Test->Print_Token_Marking();
-
 
 	//================================================
 	// Code requiring user input to end program

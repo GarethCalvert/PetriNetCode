@@ -1,5 +1,12 @@
+//=======================================================================
+// Gareth Calvert - University of Nottingham
+// Transition_Stochastic.h - Stochastic Transition class, inherits 
+// functions from the Transition_Abstract class
+//=======================================================================
 #pragma once
 #include "Transition_Abstract.h"
+//=======================================================================
+
 class Transition_Stochastic: public Transition_Abstract
 {
 public:

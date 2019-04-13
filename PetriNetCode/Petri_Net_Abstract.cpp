@@ -1,5 +1,10 @@
+//=======================================================================
+// Gareth Calvert - University of Nottingham
+// Petri_Net_Abstract.cpp - Abstract Petri net class for deriving PNs
+//=======================================================================
 #include "pch.h"
 #include "Petri_Net_Abstract.h"
+//=======================================================================
 
 //================================================
 // Print Header
