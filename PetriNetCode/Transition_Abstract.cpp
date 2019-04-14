@@ -95,6 +95,10 @@ void Transition_Abstract::Transition_Fire()
 	{
 		mpOutputPlaces->at(i)->Add_Tokens(mpOutputWeights->at(i));
 	}
+
+	mTransitionEnabled = false;
+
+	// **** Maybe place time resample here
 		
 }
 
@@ -114,12 +118,13 @@ void Transition_Abstract::Transition_Enabled_Check(double GlobalTime)
 			if (mpInhibitorPlaces->at(i)->Get_Place_Marking() >= mpInhibitorWeights->at(i))
 			{
 				mTransitionInhibited = true;
+				mTransitionEnabled = false;
 				Enabled_Test = false;
 			}
 		}
 	}
 
-	// If Transition is already enabled check that it still is
+	// If Transition is already enabled, check that it still is
 	if (mTransitionEnabled == true && mTransitionInhibited == false)
 	{
 		for (unsigned int i = 0; i < mNumberInputArcs; i++)
@@ -130,7 +135,7 @@ void Transition_Abstract::Transition_Enabled_Check(double GlobalTime)
 				{
 					mTransitionEnabled = false;
 					Enabled_Test = false;
-					// *** Cumulative Time probably would need reset
+					mCumulativeTime = 0.0; // Reset cumulative time
 				}
 			}
 		}
@@ -149,7 +154,7 @@ void Transition_Abstract::Transition_Enabled_Check(double GlobalTime)
 		Enabled_Test = false;
 	}
 
-	// If transition is not already, and it is not inhibited then check if it is
+	// If transition is not already, and it is not inhibited, then check if it is enabled now
 	if (Enabled_Test == true)
 	{
 		for (unsigned int i = 0; i < mNumberInputArcs; i++)
@@ -159,6 +164,7 @@ void Transition_Abstract::Transition_Enabled_Check(double GlobalTime)
 				if (mpInputPlaces->at(i)->Get_Place_Marking() < mpInputWeights->at(i))
 				{
 					mTransitionEnabled = false;
+					Enabled_Test = false;
 				}
 			}
 		}
@@ -211,4 +217,43 @@ unsigned int Transition_Abstract::Get_Number_Output_Arcs()
 unsigned int Transition_Abstract::Get_Number_Inhibitor_Arcs()
 {
 	return mNumberInhibitorArcs;
+}
+
+//=======================================================================
+// Accessor Function to get remaining delay before fire
+//=======================================================================
+double Transition_Abstract::Get_Remaining_Delay()
+{
+	return mRemainingDelay;
+}
+
+//=======================================================================
+// Function to print out Transition Properties
+//=======================================================================
+void Transition_Abstract::Print_Transition_Properties()
+{
+	string temp;
+	cout << endl << "The properties of " << mTransitionName << " are: " << endl;
+	temp = "Firing Time: " + to_string(mTransitionDelay);
+	cout << temp << endl;
+	cout << "Input Arcs: "; 
+	for (unsigned int i = 0; i < mNumberInputArcs; i++)
+	{
+		temp = mpInputPlaces->at(i)->Get_Place_Name() + " (" + to_string(mpInputWeights->at(i)) + ") ";
+		cout << temp;
+	}
+	cout << endl << "Output Arcs: ";
+	for (unsigned int i = 0; i < mNumberOutputArcs; i++)
+	{
+		temp = mpOutputPlaces->at(i)->Get_Place_Name() + " (" + to_string(mpOutputWeights->at(i)) + ") ";
+		cout << temp;
+	}
+	cout << endl << "Inhibitor Arcs: ";
+	for (unsigned int i = 0; i < mNumberInhibitorArcs; i++)
+	{
+		temp = mpInhibitorPlaces->at(i)->Get_Place_Name() + " (" + to_string(mpInhibitorWeights->at(i)) + ") ";
+		cout << temp;
+	}
+
+	cout << endl;
 }

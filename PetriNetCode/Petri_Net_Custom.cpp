@@ -19,6 +19,13 @@ Petri_Net_Custom::Petri_Net_Custom(std::string PetriNetName, double InitialTime,
 	Create_Places_Vector();
 	Create_Transitions_Vector();
 	Assign_Arcs();
+
+	mpInitialMarking = new vector<unsigned int>[mNumberPlaces];
+	mpCurrentMarking = new vector<unsigned int>[mNumberPlaces];
+
+	Update_Marking();
+
+	*mpInitialMarking = *mpCurrentMarking;
 }
 
 //=======================================================================

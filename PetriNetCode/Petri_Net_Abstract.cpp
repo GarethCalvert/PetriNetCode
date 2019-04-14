@@ -36,6 +36,19 @@ void Petri_Net_Abstract::Print_Iteration()
 }
 
 //================================================
+// Print Transition Properties
+//================================================
+void Petri_Net_Abstract::Print_Transition_Properties()
+{
+	for (unsigned int i = 0; i < mNumberTransitions; i++)
+	{
+		mpTransitions->at(i)->Print_Transition_Properties();
+	}
+
+	Print_Footer();
+}
+
+//================================================
 // Print Token Marking
 //================================================
 void Petri_Net_Abstract::Print_Token_Marking()
@@ -47,6 +60,18 @@ void Petri_Net_Abstract::Print_Token_Marking()
 	}
 
 	Print_Footer();
+}
+
+//================================================
+// Update Token Marking
+//================================================
+void Petri_Net_Abstract::Update_Marking()
+{
+	for (unsigned int i = 0; i < mNumberPlaces; i++)
+	{
+		mpCurrentMarking->clear();
+		mpCurrentMarking->push_back(mpPlaces->at(i)->Get_Place_Marking());
+	}
 }
 
 //=======================================================================
@@ -261,7 +286,7 @@ void Petri_Net_Abstract::Create_Transitions_Vector()
 		if (Transition_Details[i][1] == 1)
 		{
 			double tempTime;
-			tempTime = 0.0; // Used until the input read function has been developed
+			tempTime = 1.0; // Used until the input read function has been developed
 			mpTransitions->push_back(new Transition_Deterministic("T" + to_string(i + 1), Transition_Details[i][2], Transition_Details[i][3], Transition_Details[i][4], tempTime));
 		}
 		// If it is a stochastic transition
@@ -323,7 +348,7 @@ void Petri_Net_Abstract::Assign_Arcs()
 		// Setting input arcs
 		for (unsigned int a = 0; a<mpTransitions->at(i)->Get_Number_Input_Arcs(); a++)
 		{
-			mpTransitions->at(i)->Set_Input_Arc(mpPlaces->at(Arc_Details[inputIndex][a + 1]-1), Arc_Details[inputWeightIndex][a+1]);
+			mpTransitions->at(i)->Set_Input_Arc(mpPlaces->at(Arc_Details[inputIndex][a+1]-1), Arc_Details[inputWeightIndex][a+1]);
 		}
 
 		// Setting output arcs
@@ -347,5 +372,125 @@ void Petri_Net_Abstract::Assign_Arcs()
 //=======================================================================
 void Petri_Net_Abstract::Continuous_Simulation()
 {
-	cout << "***EMPTY FUNCTION***" << endl;
+	// Setting up simulation
+	mContinueSimulation = true;
+	mCurrentGlobalTime = mInitialTime;
+	mEnabledTransitions.clear();
+	int NumEnabled;
+	bool temp;
+
+	// While loop to break out of
+	while (mContinueSimulation == true)
+	{
+		// Clear vector of enabled transitions for next iteration
+		mEnabledTransitions.clear();
+		NumEnabled = 0;
+
+		// Check for enabled transitions
+		for (int i = 0; i < mNumberTransitions; i++)
+		{
+			mpTransitions->at(i)->Transition_Enabled_Check(mCurrentGlobalTime);
+			temp = mpTransitions->at(i)->Get_Enabled_Status();
+			
+			if (temp == true)
+			{
+				mEnabledTransitions.push_back(i);
+				NumEnabled++;
+			}
+		}
+	
+		// If nothing is enabled, then net is stationary
+		if (NumEnabled == 0)
+		{
+			mContinueSimulation = false;
+			Update_Marking();
+		}
+			
+		// If time has elapsed to final time, terminate simualtion
+		if (mCurrentGlobalTime >= mFinalTime)
+		{
+			mContinueSimulation = false;
+			Update_Marking();
+		}
+
+		// Determining Enabled Transition with Shortest Remaining Firing Delay
+		// If tied, transition with lowest index is selected
+		// Boolean Check, to save unnecessary computations
+		if (mContinueSimulation == true)
+		{
+			mNumberShortestEnable = 1;
+			mShortestEnableIndex = 0;
+			mAllShortestEnable.push_back(mEnabledTransitions.at(0));
+			// For loop to sort enabled transitions by firing time
+			for (int i = 1; i< NumEnabled; i++)
+			{
+				// Checking if the firing has the shorter firing time than current shortest
+				if (mpTransitions->at(mEnabledTransitions.at(mShortestEnableIndex))->Get_Remaining_Delay() > mpTransitions->at(mEnabledTransitions.at(i))->Get_Remaining_Delay())
+				{
+					mShortestEnableIndex = i;
+					mNumberShortestEnable = 1;
+					mAllShortestEnable.clear();
+					mAllShortestEnable.push_back(mEnabledTransitions.at(mShortestEnableIndex));
+				}
+					
+				// Checking if the firing has the same firing time as shortest
+				if (mpTransitions->at(mEnabledTransitions.at(mShortestEnableIndex))->Get_Remaining_Delay() == mpTransitions->at(mEnabledTransitions.at(i))->Get_Remaining_Delay() && mShortestEnableIndex != i)
+				{
+					cout << "Note: Transition Firing Tie Break" << endl;
+					//cout << mpTransitions->at(mEnabledTransitions.at(mShortestEnableIndex))->Get_Transition_Name() << endl;
+					mNumberShortestEnable++;
+					mAllShortestEnable.push_back(mEnabledTransitions.at(mShortestEnableIndex));
+				}
+			}
+		}
+			
+		if (mContinueSimulation == true)
+		{
+			// Check that shortest firing time doesn't occur after final time of simulation
+			if (mpTransitions->at(mEnabledTransitions.at(mShortestEnableIndex))->Get_Remaining_Delay() + mCurrentGlobalTime > mFinalTime)
+			{
+				//If it does, stop simulating
+				mContinueSimulation = false;
+				mCurrentGlobalTime = mFinalTime;
+				Update_Marking();
+			}
+		}
+
+		if (mContinueSimulation == true)
+		{
+			// Fire the enabled transition with the shortest firing delay first. 
+			// If there are multiple enabled with the same shortest time.
+			// The first fires then the remaining are re-checked and then also fired.
+			
+			// Update Global Time
+			mCurrentGlobalTime = mCurrentGlobalTime + mpTransitions->at(mEnabledTransitions.at(0))->Get_Remaining_Delay();
+			mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(0)))->Transition_Fire();
+
+			if (mNumberShortestEnable > 1)
+			{
+				for (int i = 1; i < mNumberShortestEnable; i++)
+				{
+					mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Transition_Enabled_Check(mCurrentGlobalTime);
+					temp = mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Get_Enabled_Status();
+
+					if (temp == true)
+					{
+						mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Transition_Fire();
+					}
+				}
+			}
+			
+		//Update Current Marking
+		Update_Marking();
+
+		// Clear vector of enabled transitions for next iteration
+		mEnabledTransitions.clear();
+		}
+	}
+}
+
+// Function to evaluate fragments of code, for the purposes of debugging
+void Petri_Net_Abstract::Test_Simulation()
+{
+
 }

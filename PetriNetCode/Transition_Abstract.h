@@ -5,6 +5,7 @@
 //=======================================================================
 #include <vector>
 #include <cmath>
+#include <string>
 #include <iostream>
 #include <random>
 #include <cassert>
@@ -38,6 +39,10 @@ class Transition_Abstract
 		unsigned int Get_Number_Input_Arcs();
 		unsigned int Get_Number_Output_Arcs();
 		unsigned int Get_Number_Inhibitor_Arcs();
+		double Get_Remaining_Delay();
+
+		// Print function
+		void Print_Transition_Properties();
 
 	protected:
 		// Transition member variables

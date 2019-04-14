@@ -25,6 +25,7 @@ int main()
 
 	PN_Test->Print_Header();
 	PN_Test->Print_Token_Marking();
+	PN_Test->Print_Transition_Properties();
 	PN_Test->Continuous_Simulation();
 	PN_Test->Print_Token_Marking();
 

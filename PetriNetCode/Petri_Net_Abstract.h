@@ -40,16 +40,18 @@ public:
 	void Print_Footer();
 	void Print_Iteration();
 	void Print_Token_Marking();
+	void Print_Transition_Properties();
 
 	//====================================
 	// Simulation Functions
 	//====================================
 	void Continuous_Simulation();
+	void Test_Simulation();
 
 	//====================================
 	// Marking Functions
 	//====================================
-	//
+	void Update_Marking();
 	//void RecordTokenMarking();
 	//void SaveTokenMarking();
 
@@ -91,7 +93,7 @@ protected:
 	vector<Transition_Abstract*>* mpTransitions;
 
 	// Vector for list of current enabled transitions
-	vector<Transition_Abstract*>* mpEnabledTransitions;
+	vector<unsigned int> mEnabledTransitions;
 
 	// Vector to store markings
 	vector<unsigned int>* mpInitialMarking;
@@ -101,7 +103,9 @@ protected:
 	bool mContinueSimulation = true;
 
 	// Int for firing correct transition
+	unsigned int mNumberShortestEnable;
 	unsigned int mShortestEnableIndex;
+	vector<unsigned int> mAllShortestEnable;
 
 	// Used to count how many simulations have occured using the same instance, aids file output names
 	unsigned int mSimulationIteration;
