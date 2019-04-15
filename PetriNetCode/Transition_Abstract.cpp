@@ -248,12 +248,18 @@ void Transition_Abstract::Print_Transition_Properties()
 		temp = mpOutputPlaces->at(i)->Get_Place_Name() + " (" + to_string(mpOutputWeights->at(i)) + ") ";
 		cout << temp;
 	}
-	cout << endl << "Inhibitor Arcs: ";
-	for (unsigned int i = 0; i < mNumberInhibitorArcs; i++)
+	if (mNumberInhibitorArcs == 0)
 	{
-		temp = mpInhibitorPlaces->at(i)->Get_Place_Name() + " (" + to_string(mpInhibitorWeights->at(i)) + ") ";
-		cout << temp;
+		cout << endl << "No Assigned Inhibitor Arcs";
 	}
-
+	else
+	{
+		cout << endl << "Inhibitor Arcs: ";
+		for (unsigned int i = 0; i < mNumberInhibitorArcs; i++)
+		{
+			temp = mpInhibitorPlaces->at(i)->Get_Place_Name() + " (" + to_string(mpInhibitorWeights->at(i)) + ") ";
+			cout << temp;
+		}
+	}
 	cout << endl;
 }

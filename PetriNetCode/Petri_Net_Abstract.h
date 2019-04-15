@@ -46,7 +46,12 @@ public:
 	// Simulation Functions
 	//====================================
 	void Continuous_Simulation();
+	void Continuous_Simulation_Marking();
+	void Continuous_Simulation_MC();
+	void Continuous_Simulation_Marking_MC();
 	void Test_Simulation();
+	void Reset_PN();
+	void Change_Initial_Marking(vector<unsigned int> NewInitialMarking);
 
 	//====================================
 	// Marking Functions
@@ -62,20 +67,6 @@ public:
 	//void ReadTransitionTimes(Vector* mSaveTransitionTimes, int rows);
 	//void ReadInputVector(std::string InputFileName, std::vector<double>* SaveVector, int InputDimension);
 
-	//====================================
-	// Random Number Generation
-	//====================================
-	
-
-	// Returns a random number between 0 & 1, with a uniform distribution
-	//double GetUniformDistributedRandomNumber();
-
-	// Random Number functions
-	//void GenerateRandomNumbers(Vector RandomVector);
-	//void SaveRandomNumbersToFile(Vector RandomVector);
-	//void PrintRandomNumbers(Vector RandomVector);
-	//void SetRandomFileName(std::string NewRandomFileName);
-
 protected:
 
 	// PN Properties
@@ -86,7 +77,7 @@ protected:
 	// Time Properties
 	double mInitialTime;
 	double mFinalTime;
-	double mCurrentGlobalTime = 0;
+	double mCurrentGlobalTime = 0.0;
 
 	// Vectors of the Place and Transition pointers
 	vector<Place*>* mpPlaces;

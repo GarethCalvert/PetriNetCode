@@ -489,8 +489,75 @@ void Petri_Net_Abstract::Continuous_Simulation()
 	}
 }
 
+//=======================================================================
+// Continuous Simualtion with a marking record and predefined intervals
+//=======================================================================
+void Petri_Net_Abstract::Continuous_Simulation_Marking()
+{
+
+}
+
+//=======================================================================
+// Monte Carlo Continuous Simulation
+//=======================================================================
+void Petri_Net_Abstract::Continuous_Simulation_MC()
+{
+
+}
+
+//=======================================================================
+// Monte Carlo Continuous Simulation, with a marking record at predefined
+// time intervals
+//=======================================================================
+void Petri_Net_Abstract::Continuous_Simulation_Marking_MC()
+{
+
+}
+
+//=======================================================================
 // Function to evaluate fragments of code, for the purposes of debugging
+//=======================================================================
 void Petri_Net_Abstract::Test_Simulation()
 {
 
+}
+
+//=======================================================================
+// Reset PN - Resets Places to Initial Marking and Resamples Transition 
+// firing delays.
+//=======================================================================
+void Petri_Net_Abstract::Reset_PN()
+{
+	// Reset Places to Initial Marking
+	for (unsigned int i = 0; i < mNumberPlaces; i++)
+	{
+		mpPlaces->at(i)->Reset_To_Initial_Marking();
+	}
+
+	// Resample firing times in transitions
+	for (unsigned int i = 0; i < mNumberTransitions; i++)
+	{
+		mpTransitions->at(i)->Transition_Resample();
+	}
+
+}
+
+//=======================================================================
+// Reset PN - Resets Places to Initial Marking and Resamples Transition 
+// firing delays.
+//=======================================================================
+void Petri_Net_Abstract::Change_Initial_Marking(vector<unsigned int> NewInitialMarking)
+{
+	// Checking that the Marking vector corresponds to the number of places in the net
+	int temp = NewInitialMarking.size();
+	assert(temp = mNumberPlaces);
+
+	// Copying over new initial marking to class
+	*mpInitialMarking = NewInitialMarking;
+
+	// Updating the initial marking of each place
+	for (unsigned int i = 0; i < mNumberPlaces; i++)
+	{
+		mpPlaces->at(i)->Change_Initial_Marking(mpInitialMarking->at(i));
+	}
 }

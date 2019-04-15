@@ -22,6 +22,7 @@ public:
 	void Add_Tokens(int num2add);
 	void Reset_To_Initial_Marking();
 	void Print_Place_Marking();
+	void Change_Initial_Marking(int InitialTokenCount);
 
 	// Accessor Functions
 	string Get_Place_Name();
