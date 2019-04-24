@@ -71,7 +71,7 @@ void Petri_Net_Abstract::Update_Marking()
 	{
 		mpCurrentMarking->clear();
 		mpCurrentMarking->push_back(mpPlaces->at(i)->Get_Place_Marking());
-	}
+	} 
 }
 
 //=======================================================================
@@ -92,7 +92,7 @@ vector<vector<int> > Petri_Net_Abstract::Read_Places_Details_Input()
 // Function read in Transitions Details Input File, returns a 2d vector 
 // containing the transition properties.
 //=======================================================================
-vector<vector<int> > Petri_Net_Abstract::Read_Transition_Details_Input()
+vector<vector<double> > Petri_Net_Abstract::Read_Transition_Details_Input()
 {
 	//============================================================
 	// Opening the file
@@ -100,11 +100,11 @@ vector<vector<int> > Petri_Net_Abstract::Read_Transition_Details_Input()
 	assert(read_file.is_open());
 
 	// Determine length of the file
-	double dummy_var1, dummy_var2, dummy_var3, dummy_var4, dummy_var5;
+	double dummy_var1, dummy_var2, dummy_var3, dummy_var4, dummy_var5, dummy_var6, dummy_var7, dummy_var8, dummy_var9, dummy_var10, dummy_var11;
 	int no_entries = 0;
 	while (!read_file.eof())
 	{
-		read_file >> dummy_var1 >> dummy_var2 >> dummy_var3 >> dummy_var4 >> dummy_var5;
+		read_file >> dummy_var1 >> dummy_var2 >> dummy_var3 >> dummy_var4 >> dummy_var5 >> dummy_var6 >> dummy_var7 >> dummy_var8 >> dummy_var9 >> dummy_var10 >> dummy_var11;
 		no_entries++;
 	}
 
@@ -115,13 +115,14 @@ vector<vector<int> > Petri_Net_Abstract::Read_Transition_Details_Input()
 	read_file.seekg(std::ios::beg);
 
 	// Allocating memory for vector
-	vector<int> Initial(5, 0);
-	vector<vector<int> > Transition_Details(no_entries, Initial);
+	vector<double> Initial(11, 0);
+	vector<vector<double> > Transition_Details(no_entries, Initial);
 
 	// Input data from the file
 	for (int i = 0; i < no_entries; i++)
 	{
-		read_file >> Transition_Details[i][0] >> Transition_Details[i][1] >> Transition_Details[i][2] >> Transition_Details[i][3] >> Transition_Details[i][4];
+		read_file >> Transition_Details[i][0] >> Transition_Details[i][1] >> Transition_Details[i][2] >> Transition_Details[i][3] >> Transition_Details[i][4] >> Transition_Details[i][5] >> Transition_Details[i][6] >> Transition_Details[i][7] >> Transition_Details[i][8] >> Transition_Details[i][9] >> Transition_Details[i][10];
+		cout << Transition_Details[i][0] << Transition_Details[i][1] << Transition_Details[i][2] << Transition_Details[i][3] << Transition_Details[i][4] << Transition_Details[i][5] << Transition_Details[i][6] << Transition_Details[i][7] << Transition_Details[i][8] << Transition_Details[i][9] << Transition_Details[i][10] << endl;
 	}
 
 	read_file.close();
@@ -273,7 +274,7 @@ void Petri_Net_Abstract::Create_Places_Vector()
 void Petri_Net_Abstract::Create_Transitions_Vector()
 {
 	// Reading in transition details 
-	vector<vector<int> > Transition_Details;
+	vector<vector<double> > Transition_Details;
 	Transition_Details = Read_Transition_Details_Input();
 
 	mNumberTransitions = Transition_Details.size();
@@ -285,30 +286,57 @@ void Petri_Net_Abstract::Create_Transitions_Vector()
 		// If it is a deterministic transition
 		if (Transition_Details[i][1] == 1)
 		{
-			double tempTime;
-			tempTime = 1.0; // Used until the input read function has been developed
-			mpTransitions->push_back(new Transition_Deterministic("T" + to_string(i + 1), Transition_Details[i][2], Transition_Details[i][3], Transition_Details[i][4], tempTime));
+			assert(Transition_Details[i][10]>=0.0);
+			mpTransitions->push_back(new Transition_Deterministic("T" + to_string(i + 1), Transition_Details[i][2], Transition_Details[i][3], Transition_Details[i][4], Transition_Details[i][10]));
 		}
 		// If it is a stochastic transition
 		else if (Transition_Details[i][1] == 2)
 		{
-			double tempNumPar, tempParaVal;
-			tempNumPar = 1;
-			tempParaVal = 1.67;
-			int tempDistribution = 1;
+			double tempNumPar; vector<double> tempParameters[3];
+			
+			if (Transition_Details[i][6] == 1)
+			{
+				tempNumPar = 1;
+				tempParameters->push_back(Transition_Details[i][7]);
+			}
+			else if (Transition_Details[i][6] == 2)
+			{
+				tempNumPar = 2;
+				tempParameters->push_back(Transition_Details[i][7]);
+				tempParameters->push_back(Transition_Details[i][8]);
+			}
+
+			else if (Transition_Details[i][6] == 3)
+			{
+				tempNumPar = 3;
+				tempParameters->push_back(Transition_Details[i][7]);
+				tempParameters->push_back(Transition_Details[i][8]);
+				tempParameters->push_back(Transition_Details[i][9]);
+			}
+			else
+			{
+				cout << "ERROR: Number of Parameters does correspond to one, two or three" << endl;
+				tempNumPar = 999;
+			}
 
 			char tempDistributionCode;
-			if (tempDistribution == 1)
+			if (Transition_Details[i][5] == 1)
 			{
 				tempDistributionCode = 'E';
 			}
-			else if (tempDistribution == 2)
+			else if (Transition_Details[i][5] == 2)
 			{
 				tempDistributionCode = 'W';
 			}
+			else
+			{
+				cout << "ERROR: Input Distribution Code is not configured in code" << endl;
+			}
 
 
-			mpTransitions->push_back(new Transition_Stochastic("T" + to_string(i + 1), Transition_Details[i][2], Transition_Details[i][3], Transition_Details[i][4], tempDistributionCode, tempNumPar, { tempParaVal}));
+			mpTransitions->push_back(new Transition_Stochastic("T" + to_string(i + 1), Transition_Details[i][2], Transition_Details[i][3], Transition_Details[i][4], tempDistributionCode, tempNumPar, *tempParameters));
+
+			//delete[] tempParameters;
 		}
 		// If it is a reset transition
 		else if (Transition_Details[i][1] == 3)

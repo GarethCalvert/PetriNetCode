@@ -26,7 +26,7 @@ class Petri_Net_Abstract
 public:
 
 	vector<vector<int> > Read_Places_Details_Input();
-	vector<vector<int> > Read_Transition_Details_Input();
+	vector<vector<double> > Read_Transition_Details_Input();
 	unsigned int** Read_Arcs_Input();
 	
 	void Create_Places_Vector();
