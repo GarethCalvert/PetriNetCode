@@ -89,6 +89,7 @@ protected:
 	// Vector to store markings
 	vector<unsigned int>* mpInitialMarking;
 	vector<unsigned int>* mpCurrentMarking;
+	vector<unsigned int>* mpMC_Marking;
 
 	// Boolean to note Continuous Simulation Status
 	bool mContinueSimulation = true;

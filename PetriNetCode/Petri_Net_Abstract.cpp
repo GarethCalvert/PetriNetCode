@@ -80,9 +80,39 @@ void Petri_Net_Abstract::Update_Marking()
 //=======================================================================
 vector<vector<int> > Petri_Net_Abstract::Read_Places_Details_Input()
 {
-	vector<int> Initial(5, 0);
-	// This is just an example to get things to work
-	vector<vector<int> > Place_Details(11, Initial);
+	//============================================================
+	// Opening the file
+	std::ifstream read_file("Places_Details.txt");
+	assert(read_file.is_open());
+
+	// Determine length of the file
+	double dummy_var1, dummy_var2;
+	int no_entries = 0;
+	while (!read_file.eof())
+	{
+		read_file >> dummy_var1 >> dummy_var2; 
+		no_entries++;
+	}
+
+	//no_entries--; // Correcting to the appropriate value
+
+	mNumberPlaces = no_entries;
+
+	// Rewind to the beginning 
+	read_file.clear();
+	read_file.seekg(std::ios::beg);
+
+	// Allocating memory for vector
+	vector<int> Initial(2, 0);
+	vector<vector<int> > Place_Details(no_entries, Initial);
+
+	// Input data from the file
+	for (int i = 0; i < no_entries; i++)
+	{
+		read_file >> Place_Details[i][0] >> Place_Details[i][1];
+	}
+
+	read_file.close();
 
 	return Place_Details;
 
@@ -122,7 +152,6 @@ vector<vector<double> > Petri_Net_Abstract::Read_Transition_Details_Input()
 	for (int i = 0; i < no_entries; i++)
 	{
 		read_file >> Transition_Details[i][0] >> Transition_Details[i][1] >> Transition_Details[i][2] >> Transition_Details[i][3] >> Transition_Details[i][4] >> Transition_Details[i][5] >> Transition_Details[i][6] >> Transition_Details[i][7] >> Transition_Details[i][8] >> Transition_Details[i][9] >> Transition_Details[i][10];
-		cout << Transition_Details[i][0] << Transition_Details[i][1] << Transition_Details[i][2] << Transition_Details[i][3] << Transition_Details[i][4] << Transition_Details[i][5] << Transition_Details[i][6] << Transition_Details[i][7] << Transition_Details[i][8] << Transition_Details[i][9] << Transition_Details[i][10] << endl;
 	}
 
 	read_file.close();
@@ -151,7 +180,6 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 	while (getline(myfile, line))
 	{
 		InputString.push_back(line);
-		//cout << line << endl;
 	}
 
 	myfile.close(); // Close File
@@ -247,17 +275,15 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 void Petri_Net_Abstract::Create_Places_Vector()
 {
 	//-------------------------------------------------
-	// This is a temp solution, in future Read_Places_Details_Input will do this automatically
-	mNumberPlaces = 6;
+	vector<vector<int> > temp_Places_Details;
+	temp_Places_Details = Read_Places_Details_Input();
 
 	mpInitialMarking = new vector<unsigned int>[mNumberPlaces];
 
-	mpInitialMarking->push_back(5);
-	mpInitialMarking->push_back(0);
-	mpInitialMarking->push_back(0);
-	mpInitialMarking->push_back(0);
-	mpInitialMarking->push_back(0);
-	mpInitialMarking->push_back(0);
+	for (unsigned int i = 0; i < mNumberPlaces; i++)
+	{
+		mpInitialMarking->push_back(temp_Places_Details[i][1]);
+	}
 	//-------------------------------------------------
 
 	mpPlaces = new vector<Place*>[mNumberPlaces];
