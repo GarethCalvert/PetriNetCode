@@ -22,6 +22,7 @@ Petri_Net_Custom::Petri_Net_Custom(std::string PetriNetName, double InitialTime,
 
 	mpInitialMarking = new vector<unsigned int>[mNumberPlaces];
 	mpCurrentMarking = new vector<unsigned int>[mNumberPlaces];
+	mpMC_Marking = new vector<double>[mNumberPlaces];
 
 	Update_Marking();
 

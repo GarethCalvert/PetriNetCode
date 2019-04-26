@@ -40,6 +40,7 @@ public:
 	void Print_Footer();
 	void Print_Iteration();
 	void Print_Token_Marking();
+	void Print_MC_Marking();
 	void Print_Transition_Properties();
 
 	//====================================
@@ -47,8 +48,8 @@ public:
 	//====================================
 	void Continuous_Simulation();
 	void Continuous_Simulation_Marking();
-	void Continuous_Simulation_MC();
-	void Continuous_Simulation_Marking_MC();
+	void Continuous_Simulation_MC(int NumberSimulations);
+	void Continuous_Simulation_Marking_MC(int NumberSimulations);
 	void Test_Simulation();
 	void Reset_PN();
 	void Change_Initial_Marking(vector<unsigned int> NewInitialMarking);
@@ -89,7 +90,7 @@ protected:
 	// Vector to store markings
 	vector<unsigned int>* mpInitialMarking;
 	vector<unsigned int>* mpCurrentMarking;
-	vector<unsigned int>* mpMC_Marking;
+	vector<double>* mpMC_Marking;
 
 	// Boolean to note Continuous Simulation Status
 	bool mContinueSimulation = true;

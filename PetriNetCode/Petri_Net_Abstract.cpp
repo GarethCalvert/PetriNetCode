@@ -54,9 +54,23 @@ void Petri_Net_Abstract::Print_Transition_Properties()
 void Petri_Net_Abstract::Print_Token_Marking()
 {
 	cout << "The current marking of " << mPetriNetName << " is: " << endl;
-	for (unsigned int i = 0; i < 6; i++)
+	for (unsigned int i = 0; i < mNumberPlaces; i++)
 	{
 		mpPlaces->at(i)->Print_Place_Marking();
+	}
+
+	Print_Footer();
+}
+
+//================================================
+// Print Token Probabilties from MC Marking
+//================================================
+void Petri_Net_Abstract::Print_MC_Marking()
+{
+	cout << "The expected markings after an MC Simulation of " << mPetriNetName << " are: " << endl;
+	for (unsigned int i = 0; i < mNumberPlaces; i++)
+	{
+		cout << mpPlaces->at(i)->Get_Place_Name() << ": " << mpMC_Marking->at(i) << endl;
 	}
 
 	Print_Footer();
@@ -67,9 +81,9 @@ void Petri_Net_Abstract::Print_Token_Marking()
 //================================================
 void Petri_Net_Abstract::Update_Marking()
 {
+	mpCurrentMarking->clear();
 	for (unsigned int i = 0; i < mNumberPlaces; i++)
 	{
-		mpCurrentMarking->clear();
 		mpCurrentMarking->push_back(mpPlaces->at(i)->Get_Place_Marking());
 	} 
 }
@@ -554,8 +568,36 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking()
 //=======================================================================
 // Monte Carlo Continuous Simulation
 //=======================================================================
-void Petri_Net_Abstract::Continuous_Simulation_MC()
+void Petri_Net_Abstract::Continuous_Simulation_MC(int NumberSimulations)
 {
+	mpMC_Marking->clear();
+
+	for (int j = 0; j < mNumberPlaces; j++)
+	{
+		mpMC_Marking->push_back(0.0);
+	}
+
+	for (int i = 0; i < NumberSimulations; i++)
+	{
+		
+		Reset_PN();
+		Continuous_Simulation();
+
+		
+
+		for (int j = 0; j < mNumberPlaces; j++)
+		{
+			mpMC_Marking->at(j) = mpMC_Marking->at(j) + mpCurrentMarking->at(j);
+		}
+
+	}
+
+	for (int j = 0; j < mNumberPlaces; j++)
+	{
+		mpMC_Marking->at(j) = mpMC_Marking->at(j)/NumberSimulations;
+	}
+
+	Print_MC_Marking();
 
 }
 
@@ -563,7 +605,7 @@ void Petri_Net_Abstract::Continuous_Simulation_MC()
 // Monte Carlo Continuous Simulation, with a marking record at predefined
 // time intervals
 //=======================================================================
-void Petri_Net_Abstract::Continuous_Simulation_Marking_MC()
+void Petri_Net_Abstract::Continuous_Simulation_Marking_MC(int NumberSimulations)
 {
 
 }
