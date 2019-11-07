@@ -74,5 +74,8 @@
     <ClCompile Include="Transition_BN.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="main_old_material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

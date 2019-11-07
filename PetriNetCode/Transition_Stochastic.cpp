@@ -11,7 +11,7 @@ using namespace std;
 //=======================================================================
 // Specialised Constructor
 //=======================================================================
-Transition_Stochastic::Transition_Stochastic(string TransitionName, unsigned int NumberIn, unsigned NumberOut, unsigned NumberInhibitorArcs, char DistributionCode, unsigned int NumberParameters, vector<double> Parameters)
+Transition_Stochastic::Transition_Stochastic(string TransitionName, unsigned int NumberIn, unsigned int NumberOut, unsigned int NumberInhibitorArcs, char DistributionCode, unsigned int NumberParameters, vector<double> Parameters)
 {
 	// Transition Properties
 	mTransitionName = TransitionName;

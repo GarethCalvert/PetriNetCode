@@ -11,7 +11,7 @@ class Transition_Stochastic: public Transition_Abstract
 {
 public:
 	// Specialised Constructor
-	Transition_Stochastic(string TransitionName, unsigned int NumberIn, unsigned NumberOut, unsigned NumberInhibitorArcs, char DistributionCode, unsigned int NumberParameters, vector<double> Parameters);
+	Transition_Stochastic(string TransitionName, unsigned int NumberIn, unsigned int NumberOut, unsigned int NumberInhibitorArcs, char DistributionCode, unsigned int NumberParameters, vector<double> Parameters);
 	// Destructor
 	~Transition_Stochastic();
 

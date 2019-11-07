@@ -96,7 +96,7 @@ vector<vector<int> > Petri_Net_Abstract::Read_Places_Details_Input()
 {
 	//============================================================
 	// Opening the file
-	std::ifstream read_file("Places_Details.txt");
+	std::ifstream read_file("InputFiles/Places_Details_" + mPetriNetName +".txt");
 	assert(read_file.is_open());
 
 	// Determine length of the file
@@ -140,7 +140,7 @@ vector<vector<double> > Petri_Net_Abstract::Read_Transition_Details_Input()
 {
 	//============================================================
 	// Opening the file
-	std::ifstream read_file("Transitions_Global_Details.txt");
+	std::ifstream read_file("InputFiles/Transitions_Global_Details_" + mPetriNetName + ".txt");
 	assert(read_file.is_open());
 
 	// Determine length of the file
@@ -182,7 +182,7 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 	//============================================================
 	// Opening the file
 	std::ifstream myfile; // Define Input Stream
-	myfile.open("Arcs_Details.txt"); // Open file
+	myfile.open("InputFiles/Arcs_Details_" + mPetriNetName + ".txt"); // Open file
 	assert(myfile.is_open()); // Check file is open
 
 	// Allocating memory for vector
@@ -241,7 +241,7 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 			index++;
 		}
 		
-		// Third Row is Input Arc Weights
+		// Third Row is Output Arc Places
 		stream = stringstream(InputString.at(Vector_Index+2));
 		index = 0;
 		while (stream >> n)
@@ -250,7 +250,7 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 			index++;
 		}
 
-		// Fourth Row is Input Arc Weights
+		// Fourth Row is Output Arc Weights
 		stream = stringstream(InputString.at(Vector_Index+3));
 		index = 0;
 		while (stream >> n)
@@ -259,7 +259,7 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 			index++;
 		}
 
-		// Fifth Row is Input Arc Weights
+		// Fifth Row is Inhibitor Arc Places
 		stream = stringstream(InputString.at(Vector_Index+4));
 		index = 0;
 		while (stream >> n)

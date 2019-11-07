@@ -175,6 +175,7 @@
     <ClCompile Include="Petri_Net_Abstract.cpp" />
     <ClCompile Include="Petri_Net_Custom.cpp" />
     <ClCompile Include="Place.cpp" />
+    <ClCompile Include="main_old_material.cpp" />
     <ClCompile Include="Transition_Abstract.cpp" />
     <ClCompile Include="Transition_BN.cpp" />
     <ClCompile Include="Transition_Deterministic.cpp" />
