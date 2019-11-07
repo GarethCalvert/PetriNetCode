@@ -94,7 +94,6 @@ void Petri_Net_Abstract::Update_Marking()
 //=======================================================================
 vector<vector<int> > Petri_Net_Abstract::Read_Places_Details_Input()
 {
-	//============================================================
 	// Opening the file
 	std::ifstream read_file("InputFiles/Places_Details_" + mPetriNetName +".txt");
 	assert(read_file.is_open());
@@ -186,7 +185,7 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 	assert(myfile.is_open()); // Check file is open
 
 	// Allocating memory for vector
-	vector<int> Initial(5, 0);
+	vector<int> Initial(5, 0); //***** I think this is included to cap the number of arcs. Need to confirm****
 	vector<vector<int> > Arc_Details1(mNumberTransitions, Initial);
 
 	string line;
@@ -204,7 +203,7 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 
 	unsigned int** Arc_Details = new unsigned int* [mNumberTransitions*6];
 
-	int Vector_Index = 0;
+	unsigned int Vector_Index = 0;
 	int n, index;
 
 
