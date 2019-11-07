@@ -39,6 +39,8 @@ class Transition_Abstract
 		unsigned int Get_Number_Input_Arcs();
 		unsigned int Get_Number_Output_Arcs();
 		unsigned int Get_Number_Inhibitor_Arcs();
+		unsigned int Get_Number_Reset_Arcs();
+		unsigned int Get_Number_Causal_Arcs();
 		double Get_Remaining_Delay();
 
 		// Print function
@@ -50,6 +52,8 @@ class Transition_Abstract
 		unsigned int mNumberInputArcs;
 		unsigned int mNumberOutputArcs;
 		unsigned int mNumberInhibitorArcs;
+		unsigned int mNumberResetArcs = 0;
+		unsigned int mNumberCausalArcs = 0;
 		vector<Place*>* mpInputPlaces;
 		vector<Place*>* mpOutputPlaces;
 		vector<Place*>* mpInhibitorPlaces;

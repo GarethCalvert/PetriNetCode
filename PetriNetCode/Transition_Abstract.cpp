@@ -204,7 +204,7 @@ unsigned int Transition_Abstract::Get_Number_Input_Arcs()
 }
 
 //=======================================================================
-// Accessor Function to get number of input arcs
+// Accessor Function to get number of output arcs
 //=======================================================================
 unsigned int Transition_Abstract::Get_Number_Output_Arcs()
 {
@@ -212,11 +212,27 @@ unsigned int Transition_Abstract::Get_Number_Output_Arcs()
 }
 
 //=======================================================================
-// Accessor Function to get number of input arcs
+// Accessor Function to get number of inhibitor arcs
 //=======================================================================
 unsigned int Transition_Abstract::Get_Number_Inhibitor_Arcs()
 {
 	return mNumberInhibitorArcs;
+}
+
+//=======================================================================
+// Accessor Function to get number of reset arcs
+//=======================================================================
+unsigned int Transition_Abstract::Get_Number_Reset_Arcs()
+{
+	return mNumberResetArcs;
+}
+
+//=======================================================================
+// Accessor Function to get number of inhibitor arcs
+//=======================================================================
+unsigned int Transition_Abstract::Get_Number_Causal_Arcs()
+{
+	return mNumberCausalArcs;
 }
 
 //=======================================================================

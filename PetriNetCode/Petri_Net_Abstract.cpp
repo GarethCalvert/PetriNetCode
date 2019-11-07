@@ -185,8 +185,8 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 	assert(myfile.is_open()); // Check file is open
 
 	// Allocating memory for vector
-	vector<int> Initial(5, 0); //***** I think this is included to cap the number of arcs. Need to confirm****
-	vector<vector<int> > Arc_Details1(mNumberTransitions, Initial);
+	//vector<int> Initial(5, 0); //***** I think this is included to cap the number of arcs. Need to confirm****
+	//vector<vector<int> > Arc_Details1(mNumberTransitions, Initial);
 
 	string line;
 	vector<string> InputString;
@@ -196,16 +196,17 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 	}
 
 	myfile.close(); // Close File
+
+	
 	
 	int Size_InputString = InputString.size();
 
-	assert(Size_InputString == mNumberTransitions*6);
+	assert(Size_InputString == mNumberTransitions*8);
 
-	unsigned int** Arc_Details = new unsigned int* [mNumberTransitions*6];
+	unsigned int** Arc_Details = new unsigned int* [mNumberTransitions*8];
 
 	unsigned int Vector_Index = 0;
 	int n, index;
-
 
 	for (int i = 0; i < mNumberTransitions; i++)
 	{
@@ -214,10 +215,13 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 		Arc_Details[Vector_Index+1] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Input_Arcs())+1];
 		Arc_Details[Vector_Index+2] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Output_Arcs())+1];
 		Arc_Details[Vector_Index+3] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Output_Arcs())+1];
-		Arc_Details[Vector_Index+4] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Output_Arcs())+1];
-		Arc_Details[Vector_Index+5] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Output_Arcs())+1];
+		Arc_Details[Vector_Index+4] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Inhibitor_Arcs())+1];
+		Arc_Details[Vector_Index+5] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Inhibitor_Arcs())+1];
+
+		Arc_Details[Vector_Index+6] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Causal_Arcs()) + 1];
+		Arc_Details[Vector_Index+7] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Reset_Arcs()) + 1];
 		
-	
+		
 		// First Row is Input Arc Places
 		stringstream stream;
 		stream = stringstream(InputString.at(Vector_Index));
@@ -275,9 +279,28 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 			Arc_Details[Vector_Index+5][index] = n;
 			index++;
 		}
+		
+		// Seventh Row is Causal Arc Places
+		stream = stringstream(InputString.at(Vector_Index + 6));
+		index = 0;
+		while (stream >> n)
+		{
+			Arc_Details[Vector_Index + 6][index] = n;
+			index++;
+		}
 
-		Vector_Index = Vector_Index + 6;
-	
+		// Eighth Row is Reset Arc Places
+		
+		stream = stringstream(InputString.at(Vector_Index + 7));
+		index = 0;
+		while (stream >> n)
+		{
+			Arc_Details[Vector_Index + 7][index] = n;
+			index++;
+		}
+		
+
+		Vector_Index = Vector_Index + 8;
 	}
 	return Arc_Details;
 }
@@ -405,12 +428,14 @@ void Petri_Net_Abstract::Assign_Arcs()
 	// Loop to go through each transition and assign the appropriate arcs
 	for (unsigned int i = 0; i<mNumberTransitions; i++)
 	{
-		inputIndex = ((i*6)+ 1)-1; 
-		inputWeightIndex = ((i*6)+ 2)-1;
-		outputIndex = ((i*6)+3)-1;
-		outputWeightIndex = ((i*6)+4)-1;
-		inhibIndex = ((i*6)+5)-1;
-		inhibWeightsIndex = ((i*6)+6)-1;
+		inputIndex = ((i*8)+ 1)-1; 
+		inputWeightIndex = ((i*8)+ 2)-1;
+		outputIndex = ((i*8)+3)-1;
+		outputWeightIndex = ((i*8)+4)-1;
+		inhibIndex = ((i*8)+5)-1;
+		inhibWeightsIndex = ((i*8)+6)-1;
+
+		cout << "HERE";
 
 		// Setting input arcs
 		for (unsigned int a = 0; a<mpTransitions->at(i)->Get_Number_Input_Arcs(); a++)

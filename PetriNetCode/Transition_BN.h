@@ -20,7 +20,6 @@ public:
 private:
 
 	// Distribution Variables
-	unsigned int mNumberCausalArcs;
 	unsigned int mNumberMarkingPermutations;
 	vector<Place*>* mpCausalPlaces;
 	vector<unsigned int>* mpCausalStateMarkings;

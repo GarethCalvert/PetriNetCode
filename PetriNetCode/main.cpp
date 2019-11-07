@@ -23,7 +23,7 @@ int main()
 	//Petri_Net_Custom
 	
 	Petri_Net_Custom* PN_Test;
-	PN_Test = new Petri_Net_Custom("Test_PN", 0, 50);
+	PN_Test = new Petri_Net_Custom("Test_PN1", 0, 50);
 
 	PN_Test->Print_Header();
 	PN_Test->Print_Token_Marking();
