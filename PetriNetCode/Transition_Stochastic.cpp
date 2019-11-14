@@ -69,10 +69,10 @@ void Transition_Stochastic::Transition_Resample()
 	}
 	else if (mDistributionCode == 'W')
 	{
-		double alpha, beta;
-		alpha = mpParameters->at(0);
-		beta = mpParameters->at(1);
-		mTransitionDelay = alpha * pow((-1 * log(Get_Uniform_Distributed_Random_Number())), (1 / beta));
+		double eta, beta;
+		eta = mpParameters->at(0); // Scale Parameter
+		beta = mpParameters->at(1); // Shape Parameter
+		mTransitionDelay = eta * pow((-1 * log(Get_Uniform_Distributed_Random_Number())), (1 / beta));
 	}
 
 }

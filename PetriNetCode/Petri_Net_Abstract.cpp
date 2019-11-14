@@ -435,8 +435,6 @@ void Petri_Net_Abstract::Assign_Arcs()
 		inhibIndex = ((i*8)+5)-1;
 		inhibWeightsIndex = ((i*8)+6)-1;
 
-		cout << "HERE";
-
 		// Setting input arcs
 		for (unsigned int a = 0; a<mpTransitions->at(i)->Get_Number_Input_Arcs(); a++)
 		{
@@ -470,6 +468,8 @@ void Petri_Net_Abstract::Continuous_Simulation()
 	mEnabledTransitions.clear();
 	int NumEnabled;
 	bool temp;
+
+	
 
 	// While loop to break out of
 	while (mContinueSimulation == true)
@@ -528,10 +528,12 @@ void Petri_Net_Abstract::Continuous_Simulation()
 				// Checking if the firing has the same firing time as shortest
 				if (mpTransitions->at(mEnabledTransitions.at(mShortestEnableIndex))->Get_Remaining_Delay() == mpTransitions->at(mEnabledTransitions.at(i))->Get_Remaining_Delay() && mShortestEnableIndex != i)
 				{
-					cout << "Note: Transition Firing Tie Break" << endl;
+					//cout << "Note: Transition Firing Tie Break" << endl;
 					//cout << mpTransitions->at(mEnabledTransitions.at(mShortestEnableIndex))->Get_Transition_Name() << endl;
 					mNumberShortestEnable++;
 					mAllShortestEnable.push_back(mEnabledTransitions.at(mShortestEnableIndex));
+
+					
 				}
 			}
 		}
@@ -559,14 +561,20 @@ void Petri_Net_Abstract::Continuous_Simulation()
 			mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(0)))->Transition_Fire();
 
 			if (mNumberShortestEnable > 1)
+
+				
 			{
 				for (int i = 1; i < mNumberShortestEnable; i++)
 				{
 					mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Transition_Enabled_Check(mCurrentGlobalTime);
-					temp = mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Get_Enabled_Status();
 
+					//cout << "Test";
+					temp = mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Get_Enabled_Status();
+					temp = true; 
+					
 					if (temp == true)
 					{
+						
 						mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Transition_Fire();
 					}
 				}
@@ -574,6 +582,8 @@ void Petri_Net_Abstract::Continuous_Simulation()
 			
 		//Update Current Marking
 		Update_Marking();
+
+		//Print_Token_Marking();
 
 		// Clear vector of enabled transitions for next iteration
 		mEnabledTransitions.clear();
