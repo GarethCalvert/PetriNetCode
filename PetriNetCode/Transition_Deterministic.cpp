@@ -56,6 +56,11 @@ Transition_Deterministic::~Transition_Deterministic()
 void Transition_Deterministic::Transition_Resample()
 {
 	// This should do nothing
+
+	mTransitionEnabled = false;
+	mTransitionInhibited = false;
+	mCumulativeTime = 0.0;
+	mRemainingDelay = mTransitionDelay;
 }
 
 

@@ -75,6 +75,13 @@ void Transition_Stochastic::Transition_Resample()
 		mTransitionDelay = eta * pow((-1 * log(Get_Uniform_Distributed_Random_Number())), (1 / beta));
 	}
 
+	// Reset of timing variables
+	mTransitionEnabled = false;
+	mTransitionInhibited = false;
+	mCumulativeTime = 0.0;
+	mRemainingDelay = mTransitionDelay;
+
+
 }
 
 //=======================================================================

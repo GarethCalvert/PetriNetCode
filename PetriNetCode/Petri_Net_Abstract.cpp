@@ -107,7 +107,7 @@ vector<vector<int> > Petri_Net_Abstract::Read_Places_Details_Input()
 		no_entries++;
 	}
 
-	//no_entries--; // Correcting to the appropriate value
+	//no_entries--; // Correcting to the appropriate value ---- Seems to depend on the value how the input file ends
 
 	mNumberPlaces = no_entries;
 
@@ -466,14 +466,14 @@ void Petri_Net_Abstract::Continuous_Simulation()
 	mContinueSimulation = true;
 	mCurrentGlobalTime = mInitialTime;
 	mEnabledTransitions.clear();
+	mAllShortestEnable.clear();
 	int NumEnabled;
 	bool temp;
-
-	
 
 	// While loop to break out of
 	while (mContinueSimulation == true)
 	{
+
 		// Clear vector of enabled transitions for next iteration
 		mEnabledTransitions.clear();
 		NumEnabled = 0;
@@ -490,7 +490,7 @@ void Petri_Net_Abstract::Continuous_Simulation()
 				NumEnabled++;
 			}
 		}
-	
+
 		// If nothing is enabled, then net is stationary
 		if (NumEnabled == 0)
 		{
@@ -505,6 +505,7 @@ void Petri_Net_Abstract::Continuous_Simulation()
 			Update_Marking();
 		}
 
+
 		// Determining Enabled Transition with Shortest Remaining Firing Delay
 		// If tied, transition with lowest index is selected
 		// Boolean Check, to save unnecessary computations
@@ -512,7 +513,9 @@ void Petri_Net_Abstract::Continuous_Simulation()
 		{
 			mNumberShortestEnable = 1;
 			mShortestEnableIndex = 0;
+			mAllShortestEnable.clear();
 			mAllShortestEnable.push_back(mEnabledTransitions.at(0));
+
 			// For loop to sort enabled transitions by firing time
 			for (int i = 1; i< NumEnabled; i++)
 			{
@@ -524,18 +527,22 @@ void Petri_Net_Abstract::Continuous_Simulation()
 					mAllShortestEnable.clear();
 					mAllShortestEnable.push_back(mEnabledTransitions.at(mShortestEnableIndex));
 				}
-					
+				
+				
 				// Checking if the firing has the same firing time as shortest
 				if (mpTransitions->at(mEnabledTransitions.at(mShortestEnableIndex))->Get_Remaining_Delay() == mpTransitions->at(mEnabledTransitions.at(i))->Get_Remaining_Delay() && mShortestEnableIndex != i)
 				{
 					//cout << "Note: Transition Firing Tie Break" << endl;
 					//cout << mpTransitions->at(mEnabledTransitions.at(mShortestEnableIndex))->Get_Transition_Name() << endl;
 					mNumberShortestEnable++;
-					mAllShortestEnable.push_back(mEnabledTransitions.at(mShortestEnableIndex));
-
-					
+					//mAllShortestEnable.push_back(mEnabledTransitions.at(mShortestEnableIndex));
+					mAllShortestEnable.push_back(mEnabledTransitions.at(i));
 				}
 			}
+
+
+			//cout << mNumberShortestEnable << endl;
+			//cout << mAllShortestEnable.size() << endl;
 		}
 			
 		if (mContinueSimulation == true)
@@ -557,33 +564,40 @@ void Petri_Net_Abstract::Continuous_Simulation()
 			// The first fires then the remaining are re-checked and then also fired.
 			
 			// Update Global Time
-			mCurrentGlobalTime = mCurrentGlobalTime + mpTransitions->at(mEnabledTransitions.at(0))->Get_Remaining_Delay();
-			mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(0)))->Transition_Fire();
+			//mCurrentGlobalTime = mCurrentGlobalTime + mpTransitions->at(mEnabledTransitions.at(0))->Get_Remaining_Delay();
+			//cout << "TEST" << endl;
+			mCurrentGlobalTime = mCurrentGlobalTime + mpTransitions->at(mAllShortestEnable.at(0))->Get_Remaining_Delay();
+			//cout << "TEST1" << endl;
+
+			mpTransitions->at(mAllShortestEnable.at(0))->Transition_Fire();
+			//cout << "TEST2" << endl;
+
 
 			if (mNumberShortestEnable > 1)
-
 				
 			{
 				for (int i = 1; i < mNumberShortestEnable; i++)
 				{
-					mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Transition_Enabled_Check(mCurrentGlobalTime);
+					//mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Transition_Enabled_Check(mCurrentGlobalTime);
 
-					//cout << "Test";
-					temp = mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Get_Enabled_Status();
+					//temp = mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Get_Enabled_Status();
+					temp = mpTransitions->at(mAllShortestEnable.at(i))->Get_Enabled_Status();
+
 					temp = true; 
 					
 					if (temp == true)
 					{
 						
-						mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Transition_Fire();
+					//pTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Transition_Fire();
+					mpTransitions->at(mAllShortestEnable.at(i))->Transition_Fire();
+
 					}
 				}
 			}
 			
+
 		//Update Current Marking
 		Update_Marking();
-
-		//Print_Token_Marking();
 
 		// Clear vector of enabled transitions for next iteration
 		mEnabledTransitions.clear();
