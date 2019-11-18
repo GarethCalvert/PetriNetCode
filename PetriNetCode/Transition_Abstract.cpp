@@ -99,6 +99,7 @@ void Transition_Abstract::Transition_Fire()
 	mTransitionEnabled = false;
 
 	// **** Maybe place time resample here
+	Transition_Resample();
 		
 }
 
@@ -136,6 +137,7 @@ void Transition_Abstract::Transition_Enabled_Check(double GlobalTime)
 					mTransitionEnabled = false;
 					Enabled_Test = false;
 					mCumulativeTime = 0.0; // Reset cumulative time
+					mRemainingDelay = mTransitionDelay;
 				}
 			}
 		}
@@ -185,7 +187,7 @@ void Transition_Abstract::Transition_Enabled_Check(double GlobalTime)
 double Transition_Abstract::Get_Uniform_Distributed_Random_Number()
 {
 	// std::random_device is a uniformly-distributed integer random number generator that produces non-deterministic random numbers.
-	std::random_device rd;
+	//std::random_device rd;
 
 	// A Mersenne Twister pseudo-random generator of 32-bit numbers with a state size of 19937 bits.
 	std::mt19937_64 gen(rd());
@@ -250,8 +252,18 @@ void Transition_Abstract::Print_Transition_Properties()
 {
 	string temp;
 	cout << endl << "The properties of " << mTransitionName << " are: " << endl;
-	temp = "Firing Time: " + to_string(mTransitionDelay);
-	cout << temp << endl;
+	if (mTransitionCode == 1)
+	{
+		temp = "Firing Time: " + to_string(mTransitionDelay);
+		cout << temp << endl;
+	}
+	else if (mTransitionCode == 2)
+	{
+		temp = "Stochastic Transition";
+		cout << temp << endl;
+	}
+
+	
 	cout << "Input Arcs: "; 
 	for (unsigned int i = 0; i < mNumberInputArcs; i++)
 	{

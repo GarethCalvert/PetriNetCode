@@ -22,6 +22,7 @@ Transition_BN::Transition_BN(string TransitionName, unsigned int NumberIn, unsig
 	mNumberCausalArcs = NumberCausalArcs;
 	mNumberMarkingPermutations = mNumberMarkingPermutations;
 	mTransitionDelay = Transition_Firing_Delay;
+	mTransitionCode = 4; // Code is 1 for Deterministic Transitions
 
 	// Initalising Arrays 
 	mpInputPlaces = new vector<Place*>[mNumberInputArcs];

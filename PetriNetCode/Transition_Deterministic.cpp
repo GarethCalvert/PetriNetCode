@@ -17,6 +17,7 @@ Transition_Deterministic::Transition_Deterministic(string TransitionName, unsign
 	mNumberInputArcs = NumberIn;
 	mNumberOutputArcs = NumberOut;
 	mNumberInhibitorArcs = NumberInhibitorArcs;
+	mTransitionCode = 1; // Code is 1 for Deterministic Transitions
 
 	// Initalising Arrays 
 	mpInputPlaces = new vector<Place*>[mNumberInputArcs];

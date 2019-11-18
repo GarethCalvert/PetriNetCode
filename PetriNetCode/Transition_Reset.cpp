@@ -14,6 +14,7 @@
 Transition_Reset::Transition_Reset()
 {
 	mNumberResetArcs = 1; // needs changed to an input variable
+	mTransitionCode = 3; // Code is 1 for Deterministic Transitions
 }
 
 //=======================================================================

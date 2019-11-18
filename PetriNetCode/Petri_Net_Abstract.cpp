@@ -469,6 +469,7 @@ void Petri_Net_Abstract::Continuous_Simulation()
 	mAllShortestEnable.clear();
 	int NumEnabled;
 	bool temp;
+	bool temp1;
 
 	// While loop to break out of
 	while (mContinueSimulation == true)
@@ -578,14 +579,14 @@ void Petri_Net_Abstract::Continuous_Simulation()
 			{
 				for (int i = 1; i < mNumberShortestEnable; i++)
 				{
-					//mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Transition_Enabled_Check(mCurrentGlobalTime);
+					mpTransitions->at(mAllShortestEnable.at(i))->Transition_Enabled_Check(mCurrentGlobalTime);
 
 					//temp = mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Get_Enabled_Status();
-					temp = mpTransitions->at(mAllShortestEnable.at(i))->Get_Enabled_Status();
+					temp1 = mpTransitions->at(mAllShortestEnable.at(i))->Get_Enabled_Status();
 
-					temp = true; 
+					//temp = true; 
 					
-					if (temp == true)
+					if (temp1 == true)
 					{
 						
 					//pTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Transition_Fire();
@@ -637,6 +638,8 @@ void Petri_Net_Abstract::Continuous_Simulation_MC(int NumberSimulations)
 		{
 			mpMC_Marking->at(j) = mpMC_Marking->at(j) + mpCurrentMarking->at(j);
 		}
+
+		
 
 	}
 

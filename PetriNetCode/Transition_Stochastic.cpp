@@ -18,6 +18,7 @@ Transition_Stochastic::Transition_Stochastic(string TransitionName, unsigned int
 	mNumberInputArcs = NumberIn;
 	mNumberOutputArcs = NumberOut;
 	mNumberInhibitorArcs = NumberInhibitorArcs;
+	mTransitionCode = 2; // Code is 1 for Deterministic Transitions
 
 	// Properties of the probability distribution for sampling times
 	mDistributionCode = DistributionCode;
@@ -80,7 +81,6 @@ void Transition_Stochastic::Transition_Resample()
 	mTransitionInhibited = false;
 	mCumulativeTime = 0.0;
 	mRemainingDelay = mTransitionDelay;
-
 
 }
 

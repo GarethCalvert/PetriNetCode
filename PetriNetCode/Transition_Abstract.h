@@ -49,6 +49,7 @@ class Transition_Abstract
 	protected:
 		// Transition member variables
 		string mTransitionName;
+		unsigned int mTransitionCode;
 		unsigned int mNumberInputArcs;
 		unsigned int mNumberOutputArcs;
 		unsigned int mNumberInhibitorArcs;
@@ -68,4 +69,7 @@ class Transition_Abstract
 		double mTransitionDelay;
 		bool mTransitionEnabled;
 		bool mTransitionInhibited;
+
+		// std::random_device is a uniformly-distributed integer random number generator that produces non-deterministic random numbers.
+		std::random_device rd;
 };
