@@ -20,5 +20,8 @@ public:
 
 	// Pure virtual functions from Transition Abstract
 	void Transition_Resample();
+
+	// Function to print out properties
+	void Transition_Type_Properties();
 };
 

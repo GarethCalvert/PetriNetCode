@@ -40,7 +40,7 @@ public:
 	void Print_Footer();
 	void Print_Iteration();
 	void Print_Token_Marking();
-	void Print_MC_Marking();
+	void Print_MC_Marking(int NumberSimulations);
 	void Print_Transition_Properties();
 
 	//====================================

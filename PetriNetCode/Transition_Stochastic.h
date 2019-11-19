@@ -21,6 +21,9 @@ public:
 	// Public Functions specific to Transition_Stochastic
 	void Set_Distribution_Parameters(char DistributionCode, unsigned int NumberParameters, vector<double> Parameters);
 
+	// Function to print out properties
+	void Transition_Type_Properties();
+
 private:
 	// Distribution Variables
 	char mDistributionCode;

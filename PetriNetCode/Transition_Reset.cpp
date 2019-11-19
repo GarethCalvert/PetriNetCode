@@ -32,3 +32,13 @@ void Transition_Reset::Transition_Resample()
 {
 
 }
+
+//=======================================================================
+// Function included here, so that each unique transition type can print
+// transition properties out
+//=======================================================================
+void Transition_Reset::Transition_Type_Properties()
+{
+
+
+}

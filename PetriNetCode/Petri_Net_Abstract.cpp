@@ -65,9 +65,10 @@ void Petri_Net_Abstract::Print_Token_Marking()
 //================================================
 // Print Token Probabilties from MC Marking
 //================================================
-void Petri_Net_Abstract::Print_MC_Marking()
+void Petri_Net_Abstract::Print_MC_Marking(int NumberSimulations)
 {
-	cout << "The expected markings after an MC Simulation of " << mPetriNetName << " are: " << endl;
+	cout << "Each simulation was executed for " + to_string(int(mFinalTime)) + " Time Units" << endl;
+	cout << "The expected markings after " + to_string(NumberSimulations) + " Simulations of " << mPetriNetName << " are: " << endl;
 	for (unsigned int i = 0; i < mNumberPlaces; i++)
 	{
 		cout << mpPlaces->at(i)->Get_Place_Name() << ": " << mpMC_Marking->at(i) << endl;
@@ -534,16 +535,11 @@ void Petri_Net_Abstract::Continuous_Simulation()
 				if (mpTransitions->at(mEnabledTransitions.at(mShortestEnableIndex))->Get_Remaining_Delay() == mpTransitions->at(mEnabledTransitions.at(i))->Get_Remaining_Delay() && mShortestEnableIndex != i)
 				{
 					//cout << "Note: Transition Firing Tie Break" << endl;
-					//cout << mpTransitions->at(mEnabledTransitions.at(mShortestEnableIndex))->Get_Transition_Name() << endl;
 					mNumberShortestEnable++;
-					//mAllShortestEnable.push_back(mEnabledTransitions.at(mShortestEnableIndex));
 					mAllShortestEnable.push_back(mEnabledTransitions.at(i));
 				}
 			}
-
-
-			//cout << mNumberShortestEnable << endl;
-			//cout << mAllShortestEnable.size() << endl;
+			
 		}
 			
 		if (mContinueSimulation == true)
@@ -565,13 +561,8 @@ void Petri_Net_Abstract::Continuous_Simulation()
 			// The first fires then the remaining are re-checked and then also fired.
 			
 			// Update Global Time
-			//mCurrentGlobalTime = mCurrentGlobalTime + mpTransitions->at(mEnabledTransitions.at(0))->Get_Remaining_Delay();
-			//cout << "TEST" << endl;
 			mCurrentGlobalTime = mCurrentGlobalTime + mpTransitions->at(mAllShortestEnable.at(0))->Get_Remaining_Delay();
-			//cout << "TEST1" << endl;
-
 			mpTransitions->at(mAllShortestEnable.at(0))->Transition_Fire();
-			//cout << "TEST2" << endl;
 
 
 			if (mNumberShortestEnable > 1)
@@ -579,23 +570,22 @@ void Petri_Net_Abstract::Continuous_Simulation()
 			{
 				for (int i = 1; i < mNumberShortestEnable; i++)
 				{
-					mpTransitions->at(mAllShortestEnable.at(i))->Transition_Enabled_Check(mCurrentGlobalTime);
+					mpTransitions->at(mAllShortestEnable.at(i))->Transition_Enabled_Check(mCurrentGlobalTime- mpTransitions->at(mAllShortestEnable.at(0))->Get_Remaining_Delay());
 
-					//temp = mpTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Get_Enabled_Status();
 					temp1 = mpTransitions->at(mAllShortestEnable.at(i))->Get_Enabled_Status();
 
-					//temp = true; 
 					
 					if (temp1 == true)
 					{
-						
-					//pTransitions->at(mEnabledTransitions.at(mAllShortestEnable.at(i)))->Transition_Fire();
 					mpTransitions->at(mAllShortestEnable.at(i))->Transition_Fire();
 
 					}
+					else
+					{
+						cout << "FALSE" << endl;
+					}
 				}
 			}
-			
 
 		//Update Current Marking
 		Update_Marking();
@@ -626,20 +616,26 @@ void Petri_Net_Abstract::Continuous_Simulation_MC(int NumberSimulations)
 		mpMC_Marking->push_back(0.0);
 	}
 
+	double SimNum;
+
 	for (int i = 0; i < NumberSimulations; i++)
 	{
 		
 		Reset_PN();
 		Continuous_Simulation();
 
+		// Used to print out MC progress to console
+		SimNum = double(i);
+		if (i % 200 == 0)
+		{
+			cout << "Simulations Completed: " + to_string(i) << endl;
+		}
 		
 
 		for (int j = 0; j < mNumberPlaces; j++)
 		{
 			mpMC_Marking->at(j) = mpMC_Marking->at(j) + mpCurrentMarking->at(j);
 		}
-
-		
 
 	}
 
@@ -648,7 +644,11 @@ void Petri_Net_Abstract::Continuous_Simulation_MC(int NumberSimulations)
 		mpMC_Marking->at(j) = mpMC_Marking->at(j)/NumberSimulations;
 	}
 
-	Print_MC_Marking();
+	// End of MC simulations print out to console
+	cout << "*** All " + to_string(NumberSimulations) + " Simulations Complete ***"<< endl;
+	Print_Footer();
+
+	Print_MC_Marking(NumberSimulations);
 
 }
 

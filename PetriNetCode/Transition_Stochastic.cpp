@@ -94,3 +94,22 @@ void Transition_Stochastic::Set_Distribution_Parameters(char DistributionCode, u
 	mpParameters = new vector<double>[mNumberParameters];
 	*mpParameters = Parameters;
 }
+
+//=======================================================================
+// Function included here, so that each unique transition type can print
+// transition properties out
+//=======================================================================
+void Transition_Stochastic::Transition_Type_Properties()
+{
+	if (mDistributionCode == 'E')
+	{
+		cout << "Stochastic Transition: Exponential Distribution" << endl;
+		cout << "Parameters: " + to_string(mpParameters->at(0)) << endl;
+	}
+	else if (mDistributionCode == 'W')
+	{
+		cout << "Stochastic Transition: Weibull Distribution" << endl;
+		cout << "Parameters: " + to_string(mpParameters->at(0)) + ", "+ to_string(mpParameters->at(1)) << endl;
+	}
+
+}

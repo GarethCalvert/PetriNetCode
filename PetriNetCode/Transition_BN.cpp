@@ -138,3 +138,13 @@ void Transition_BN::Transition_Fire()
 	}
 
 }
+
+//=======================================================================
+// Function included here, so that each unique transition type can print
+// transition properties out
+//=======================================================================
+void Transition_BN::Transition_Type_Properties()
+{
+
+
+}

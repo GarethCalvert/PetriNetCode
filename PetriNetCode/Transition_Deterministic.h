@@ -22,5 +22,8 @@ public:
 
 	// Public Functions specific to Transition_Stochastic
 	void Set_Transition_Delay(double TransitionDelay);
+
+	// Function to print out properties
+	void Transition_Type_Properties();
 };
 

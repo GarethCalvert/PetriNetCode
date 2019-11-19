@@ -19,6 +19,7 @@ class Transition_Abstract
 	public:
 		// Pure Virtual functions that are required for derived classes
 		virtual void Transition_Resample() = 0;
+		virtual void Transition_Type_Properties() = 0;
 
 		// Virtual functions that are defined but can be overridden by derived classes
 		virtual void Transition_Fire();
@@ -31,6 +32,7 @@ class Transition_Abstract
 		void Set_Input_Arc(Place* InputPlace, unsigned int InputWeight);
 		void Set_Output_Arc(Place* OutputPlace, unsigned int OutputWeight);
 		void Set_Inhibitor_Arc(Place* InhibitorPlace, unsigned int InhibitorWeight);
+		
 		bool Get_Enabled_Status();
 		double Get_Uniform_Distributed_Random_Number();
 
@@ -45,6 +47,7 @@ class Transition_Abstract
 
 		// Print function
 		void Print_Transition_Properties();
+		
 
 	protected:
 		// Transition member variables

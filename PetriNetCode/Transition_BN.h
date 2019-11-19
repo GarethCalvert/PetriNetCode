@@ -14,6 +14,10 @@ public:
 
 	void Transition_Fire();
 
+
+	// Function to print out properties
+	void Transition_Type_Properties();
+
 	// Public Functions specific to Transition_BN
 	
 

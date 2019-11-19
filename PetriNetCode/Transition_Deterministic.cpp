@@ -33,6 +33,10 @@ Transition_Deterministic::Transition_Deterministic(string TransitionName, unsign
 	mCumulativeTime = 0.0;
 	mTransitionDelay = Transition_Firing_Delay;
 	mRemainingDelay = mTransitionDelay;
+
+	// Function to print out properties
+	void Transition_Type_Properties();
+
 	
 }
 
@@ -72,4 +76,15 @@ void Transition_Deterministic::Set_Transition_Delay(double TransitionDelay)
 {
 	assert(TransitionDelay >= 0);
 	mTransitionDelay = TransitionDelay;
+}
+
+//=======================================================================
+// Function included here, so that each unique transition type can print
+// transition properties out
+//=======================================================================
+void Transition_Deterministic::Transition_Type_Properties()
+{
+	cout << "Deterministic Transition"<< endl;
+	cout << "Firing Time: " + to_string(mTransitionDelay) << endl;
+
 }

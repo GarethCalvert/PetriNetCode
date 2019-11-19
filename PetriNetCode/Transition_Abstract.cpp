@@ -63,6 +63,15 @@ void Transition_Abstract::Set_Inhibitor_Arc(Place *InhibitorPlace, unsigned int 
 }
 
 //=======================================================================
+// Function included here, so that each unique transition type can print
+// transition properties out
+//=======================================================================
+void Transition_Abstract::Transition_Type_Properties()
+{
+
+}
+
+//=======================================================================
 // Return Transition Name as a string
 //=======================================================================
 string Transition_Abstract::Get_Transition_Name()
@@ -138,6 +147,10 @@ void Transition_Abstract::Transition_Enabled_Check(double GlobalTime)
 					Enabled_Test = false;
 					mCumulativeTime = 0.0; // Reset cumulative time
 					mRemainingDelay = mTransitionDelay;
+
+					// ***********************
+					// If a transition is enabled and then finds itself disabled. It should be resampled for a new time, if it is stochastic etc
+					Transition_Resample();
 				}
 			}
 		}
@@ -252,18 +265,8 @@ void Transition_Abstract::Print_Transition_Properties()
 {
 	string temp;
 	cout << endl << "The properties of " << mTransitionName << " are: " << endl;
-	if (mTransitionCode == 1)
-	{
-		temp = "Firing Time: " + to_string(mTransitionDelay);
-		cout << temp << endl;
-	}
-	else if (mTransitionCode == 2)
-	{
-		temp = "Stochastic Transition";
-		cout << temp << endl;
-	}
+	Transition_Type_Properties();
 
-	
 	cout << "Input Arcs: "; 
 	for (unsigned int i = 0; i < mNumberInputArcs; i++)
 	{
