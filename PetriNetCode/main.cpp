@@ -30,7 +30,7 @@ int main()
 	PN_Test->Print_Transition_Properties();
 	
 	// Monte Carlo Simulation
-	PN_Test->Continuous_Simulation_MC(600);
+	PN_Test->Continuous_Simulation_MC(20000);
 
 	//================================================
 	// Code requiring user input to end program
