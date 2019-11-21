@@ -87,6 +87,17 @@ bool Transition_Abstract::Get_Enabled_Status()
 	return mTransitionEnabled;
 }
 
+
+//=======================================================================
+// Vitural Function - Reset_Transition_To_Initial() - Default definition unless 
+// overridden
+//=======================================================================
+void Transition_Abstract::Reset_Transition_To_Initial()
+{
+	mNumberTransitionFires = 0;
+	Transition_Resample();
+}
+
 //=======================================================================
 // Vitural Function - Transition_Fire() - Default definition unless 
 // overridden
@@ -106,8 +117,9 @@ void Transition_Abstract::Transition_Fire()
 	}
 
 	mTransitionEnabled = false;
+	mNumberTransitionFires++;
 
-	// **** Maybe place time resample here
+	// Resampling a new transition delay for the transition using the any pre-defined distribution
 	Transition_Resample();
 		
 }
@@ -248,6 +260,14 @@ unsigned int Transition_Abstract::Get_Number_Reset_Arcs()
 unsigned int Transition_Abstract::Get_Number_Causal_Arcs()
 {
 	return mNumberCausalArcs;
+}
+
+//=======================================================================
+// Accessor Function to get transition fire count
+//=======================================================================
+unsigned int Transition_Abstract::Get_Transition_Fire_Count()
+{
+	return mNumberTransitionFires;
 }
 
 //=======================================================================

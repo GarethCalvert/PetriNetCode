@@ -63,6 +63,20 @@ void Petri_Net_Abstract::Print_Token_Marking()
 }
 
 //================================================
+// Print Transition Fire Count
+//================================================
+void Petri_Net_Abstract::Print_Transition_Fire_Count()
+{
+	cout << "The current number transition fires for " << mPetriNetName << " is: " << endl;
+	for (int i = 0; i < mNumberTransitions; i++)
+	{
+		cout << mpTransitions->at(i)->Get_Transition_Name() + ": "+ to_string(mpTransitionFireCount->at(i)) << endl;
+	}
+
+	Print_Footer();
+}
+
+//================================================
 // Print Token Probabilties from MC Marking
 //================================================
 void Petri_Net_Abstract::Print_MC_Marking(int NumberSimulations)
@@ -78,6 +92,21 @@ void Petri_Net_Abstract::Print_MC_Marking(int NumberSimulations)
 }
 
 //================================================
+// Print Token Probabilties from MC Marking
+//================================================
+void Petri_Net_Abstract::Print_MC_Transition_Count(int NumberSimulations)
+{
+	cout << "Each simulation was executed for " + to_string(int(mFinalTime)) + " Time Units" << endl;
+	cout << "The expected transition fire counts after " + to_string(NumberSimulations) + " Simulations of " << mPetriNetName << " are: " << endl;
+	for (unsigned int i = 0; i < mNumberTransitions; i++)
+	{
+		cout << mpTransitions->at(i)->Get_Transition_Name() << ": " << mpMC_TransitionCount->at(i) << endl;
+	}
+
+	Print_Footer();
+}
+
+//================================================
 // Update Token Marking
 //================================================
 void Petri_Net_Abstract::Update_Marking()
@@ -87,6 +116,18 @@ void Petri_Net_Abstract::Update_Marking()
 	{
 		mpCurrentMarking->push_back(mpPlaces->at(i)->Get_Place_Marking());
 	} 
+}
+
+//================================================
+// Update Transition Fire Count
+//================================================
+void Petri_Net_Abstract::Update_Transition_Fire_Count()
+{
+	mpTransitionFireCount->clear();
+	for (unsigned int i = 0; i < mNumberTransitions; i++)
+	{
+		mpTransitionFireCount->push_back(mpTransitions->at(i)->Get_Transition_Fire_Count());
+	}
 }
 
 //=======================================================================
@@ -590,6 +631,9 @@ void Petri_Net_Abstract::Continuous_Simulation()
 		//Update Current Marking
 		Update_Marking();
 
+		// Update Transition Fire Count
+		Update_Transition_Fire_Count();
+
 		// Clear vector of enabled transitions for next iteration
 		mEnabledTransitions.clear();
 		}
@@ -616,6 +660,11 @@ void Petri_Net_Abstract::Continuous_Simulation_MC(int NumberSimulations)
 		mpMC_Marking->push_back(0.0);
 	}
 
+	for (int j = 0; j < mNumberTransitions; j++)
+	{
+		mpMC_TransitionCount->push_back(0.0);
+	}
+
 	double SimNum;
 
 	for (int i = 0; i < NumberSimulations; i++)
@@ -626,7 +675,7 @@ void Petri_Net_Abstract::Continuous_Simulation_MC(int NumberSimulations)
 
 		// Used to print out MC progress to console
 		SimNum = double(i);
-		if (i % 200 == 0)
+		if (i % 500 == 0)
 		{
 			cout << "Simulations Completed: " + to_string(i) << endl;
 		}
@@ -637,6 +686,11 @@ void Petri_Net_Abstract::Continuous_Simulation_MC(int NumberSimulations)
 			mpMC_Marking->at(j) = mpMC_Marking->at(j) + mpCurrentMarking->at(j);
 		}
 
+		for (int k = 0; k < mNumberTransitions; k++)
+		{
+			mpMC_TransitionCount->at(k) = mpMC_TransitionCount->at(k) + mpTransitionFireCount->at(k);
+		}
+
 	}
 
 	for (int j = 0; j < mNumberPlaces; j++)
@@ -644,11 +698,20 @@ void Petri_Net_Abstract::Continuous_Simulation_MC(int NumberSimulations)
 		mpMC_Marking->at(j) = mpMC_Marking->at(j)/NumberSimulations;
 	}
 
+	for (int k = 0; k < mNumberTransitions; k++)
+	{
+		mpMC_TransitionCount->at(k) = mpMC_TransitionCount->at(k)/NumberSimulations;
+	}
+
 	// End of MC simulations print out to console
 	cout << "*** All " + to_string(NumberSimulations) + " Simulations Complete ***"<< endl;
 	Print_Footer();
 
 	Print_MC_Marking(NumberSimulations);
+	Print_MC_Transition_Count(NumberSimulations);
+
+	Save_Double_Vector_To_File(("OutputFiles/MC_Marking_" + mPetriNetName + "_" + to_string(NumberSimulations) + ".csv"), *mpMC_Marking);
+	Save_Double_Vector_To_File(("OutputFiles/MC_Transition_Count_" + mPetriNetName + "_" + to_string(NumberSimulations) + ".csv"), *mpMC_TransitionCount);
 
 }
 
@@ -684,7 +747,7 @@ void Petri_Net_Abstract::Reset_PN()
 	// Resample firing times in transitions
 	for (unsigned int i = 0; i < mNumberTransitions; i++)
 	{
-		mpTransitions->at(i)->Transition_Resample();
+		mpTransitions->at(i)->Reset_Transition_To_Initial();
 	}
 
 }
@@ -708,3 +771,61 @@ void Petri_Net_Abstract::Change_Initial_Marking(vector<unsigned int> NewInitialM
 		mpPlaces->at(i)->Change_Initial_Marking(mpInitialMarking->at(i));
 	}
 }
+
+//========================================================
+// Save Vector to File
+//========================================================
+
+void Petri_Net_Abstract::Save_Double_Vector_To_File(const std::string FileName, vector<double> Vector_To_Write)
+{
+	// Setting strem file precision
+	std::ofstream output_file;
+	output_file.setf(std::ios::scientific, std::ios::floatfield);
+	output_file.precision(6);
+
+	// Opening file
+	std::string file_name = FileName;
+	output_file.open(file_name);
+	assert(output_file.is_open());
+
+	// Write data
+	for (int i = 0; i < Vector_To_Write.size(); i++)
+	{
+		output_file << std::setw(15) << Vector_To_Write.at(i);
+		output_file << std::endl;
+	}
+
+	// Close file
+	output_file.close();
+}
+
+//========================================================
+// Save Matrix to File
+//========================================================
+/*
+void Petri_Net_Abstract::Save_Matrix_To_File(const std::string FileName, vector<vector<double>> Matrix_To_Write)
+{
+	// Setting strem file precision
+	std::ofstream output_file;
+	output_file.setf(std::ios::scientific, std::ios::floatfield);
+	output_file.precision(6);
+
+	// Opening file
+	std::string file_name = FileName;
+	output_file.open(file_name);
+	assert(output_file.is_open());
+
+	// Write data
+	for (int i = 0; i < Matrix_To_Write.size(); i++)
+	{
+		for (int j = 0; j < Matrix_To_Write.at(i).size(); j++)
+		{
+			output_file << std::setw(15) << Matrix_To_Write.at(i).at(j) << " ";
+		}
+		output_file << std::endl;
+	}
+
+	// Close file
+	output_file.close();
+}
+*/

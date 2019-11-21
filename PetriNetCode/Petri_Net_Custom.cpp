@@ -22,7 +22,9 @@ Petri_Net_Custom::Petri_Net_Custom(std::string PetriNetName, double InitialTime,
 
 	mpInitialMarking = new vector<unsigned int>[mNumberPlaces];
 	mpCurrentMarking = new vector<unsigned int>[mNumberPlaces];
+	mpTransitionFireCount = new vector<unsigned int>[mNumberTransitions];
 	mpMC_Marking = new vector<double>[mNumberPlaces];
+	mpMC_TransitionCount = new vector<double>[mNumberTransitions];
 
 	Update_Marking();
 
@@ -34,5 +36,9 @@ Petri_Net_Custom::Petri_Net_Custom(std::string PetriNetName, double InitialTime,
 //=======================================================================
 Petri_Net_Custom::~Petri_Net_Custom()
 {
+	delete [] mpInitialMarking;
+	delete [] mpCurrentMarking;
+	delete [] mpTransitionFireCount;
+	delete [] mpMC_Marking;
 
 }

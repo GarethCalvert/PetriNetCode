@@ -40,7 +40,9 @@ public:
 	void Print_Footer();
 	void Print_Iteration();
 	void Print_Token_Marking();
+	void Print_Transition_Fire_Count();
 	void Print_MC_Marking(int NumberSimulations);
+	void Print_MC_Transition_Count(int NumberSimulations);
 	void Print_Transition_Properties();
 
 	//====================================
@@ -58,12 +60,14 @@ public:
 	// Marking Functions
 	//====================================
 	void Update_Marking();
+	void Update_Transition_Fire_Count();
 	//void RecordTokenMarking();
 	//void SaveTokenMarking();
 
 	//====================================
 	// Other I/O Functions
 	//====================================
+	void Save_Double_Vector_To_File(const std::string FileName, vector<double> Vector_To_Write);
 	//void SaveMatrix(Matrix SaveMatrix, const std::string FileName, const int rows, const int cols, const std::string SavingDescription);
 	//void ReadTransitionTimes(Vector* mSaveTransitionTimes, int rows);
 	//void ReadInputVector(std::string InputFileName, std::vector<double>* SaveVector, int InputDimension);
@@ -90,7 +94,9 @@ protected:
 	// Vector to store markings
 	vector<unsigned int>* mpInitialMarking;
 	vector<unsigned int>* mpCurrentMarking;
+	vector<unsigned int>* mpTransitionFireCount;
 	vector<double>* mpMC_Marking;
+	vector<double>* mpMC_TransitionCount;
 
 	// Boolean to note Continuous Simulation Status
 	bool mContinueSimulation = true;

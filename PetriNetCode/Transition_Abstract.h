@@ -24,6 +24,7 @@ class Transition_Abstract
 		// Virtual functions that are defined but can be overridden by derived classes
 		virtual void Transition_Fire();
 		virtual void Transition_Enabled_Check(double GlobalTime);
+		virtual void Reset_Transition_To_Initial();
 
 		// Public functions common to all derived transition classes
 		void Set_Input_Arcs_Vector(vector<Place*> InputPlaces, vector<unsigned int> InputWeights);
@@ -43,8 +44,9 @@ class Transition_Abstract
 		unsigned int Get_Number_Inhibitor_Arcs();
 		unsigned int Get_Number_Reset_Arcs();
 		unsigned int Get_Number_Causal_Arcs();
+		unsigned int Get_Transition_Fire_Count();
 		double Get_Remaining_Delay();
-
+		
 		// Print function
 		void Print_Transition_Properties();
 		
@@ -58,6 +60,7 @@ class Transition_Abstract
 		unsigned int mNumberInhibitorArcs;
 		unsigned int mNumberResetArcs = 0;
 		unsigned int mNumberCausalArcs = 0;
+		unsigned int mNumberTransitionFires = 0;
 		vector<Place*>* mpInputPlaces;
 		vector<Place*>* mpOutputPlaces;
 		vector<Place*>* mpInhibitorPlaces;
