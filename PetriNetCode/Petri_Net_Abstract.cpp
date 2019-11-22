@@ -516,7 +516,6 @@ void Petri_Net_Abstract::Continuous_Simulation()
 	// While loop to break out of
 	while (mContinueSimulation == true)
 	{
-
 		// Clear vector of enabled transitions for next iteration
 		mEnabledTransitions.clear();
 		NumEnabled = 0;
@@ -628,24 +627,246 @@ void Petri_Net_Abstract::Continuous_Simulation()
 				}
 			}
 
+		// Clear vector of enabled transitions for next iteration
+		mEnabledTransitions.clear();
+		}
+	}
+
+		// ** Not in while loop to avoid continuously overwritting the value, as in this simulation we are only interested in the values at the end
 		//Update Current Marking
 		Update_Marking();
 
 		// Update Transition Fire Count
 		Update_Transition_Fire_Count();
 
-		// Clear vector of enabled transitions for next iteration
-		mEnabledTransitions.clear();
-		}
-	}
 }
 
 //=======================================================================
 // Continuous Simualtion with a marking record and predefined intervals
 //=======================================================================
-void Petri_Net_Abstract::Continuous_Simulation_Marking()
+void Petri_Net_Abstract::Continuous_Simulation_Marking(double TimeInterval)
 {
+	//-----------------------------------------------------------
+	// Additional Setting up simulation for marking
+	// Calculating the number Time Intervals
+	double NumTimeIntervals;
+	NumTimeIntervals = ((mFinalTime - mInitialTime) / TimeInterval) + 1;
 
+	// Only works in Debug mode
+	assert(ceil(NumTimeIntervals) == floor(NumTimeIntervals));
+
+	// Print out to cons
+	if (ceil(NumTimeIntervals) != floor(NumTimeIntervals))
+	{
+		cout << "Inteval Size results in a non-integer number of time intervals";
+	}
+
+	// Ensure it is has an integer value
+	NumTimeIntervals = ceil(NumTimeIntervals);
+
+	//mpTimeStepMarkings = new vector<vector<unsigned int>>[mNumberTransitions];
+
+	// ******* Initialise Matrix for recording all markings
+	mTimeStepMarkings.clear();
+	mTimeStepTransitionFireCounts.clear();
+
+	// Recording at time step
+	Update_Marking();
+	mTimeStepMarkings.push_back(*mpCurrentMarking);
+	Update_Transition_Fire_Count();
+	mTimeStepTransitionFireCounts.push_back(*mpTransitionFireCount);
+
+	// Determine when the next marking is
+	double LastMarkingTime = mInitialTime;
+	double NextMarkingTime;
+	unsigned int NumberMarkingsDone = 1;
+	NextMarkingTime = mInitialTime + TimeInterval;
+
+
+	//-----------------------------------------------------------
+	// Setting up simulation
+	mContinueSimulation = true;
+	mCurrentGlobalTime = mInitialTime;
+	mEnabledTransitions.clear();
+	mAllShortestEnable.clear();
+	int NumEnabled;
+	bool temp;
+	bool temp1;
+
+	// While loop to break out of
+	while (mContinueSimulation == true)
+	{
+		// Clear vector of enabled transitions for next iteration
+		mEnabledTransitions.clear();
+		NumEnabled = 0;
+
+		// Check for enabled transitions
+		for (int i = 0; i < mNumberTransitions; i++)
+		{
+			mpTransitions->at(i)->Transition_Enabled_Check(mCurrentGlobalTime);
+			temp = mpTransitions->at(i)->Get_Enabled_Status();
+
+			if (temp == true)
+			{
+				mEnabledTransitions.push_back(i);
+				NumEnabled++;
+			}
+		}
+
+		// If nothing is enabled, then net is stationary
+		if (NumEnabled == 0)
+		{
+			mContinueSimulation = false;
+			Update_Marking();
+			Update_Transition_Fire_Count();
+
+			// Fill in the remaining required markings with the current one
+			for (int i = NumberMarkingsDone + 1; i < NumTimeIntervals; i++)
+			{
+				mTimeStepMarkings.push_back(*mpCurrentMarking);
+				mTimeStepTransitionFireCounts.push_back(*mpTransitionFireCount);
+				NumberMarkingsDone++;
+			}
+
+			LastMarkingTime = mFinalTime;
+
+		}
+
+		// If time has elapsed to final time, terminate simualtion
+		if (mCurrentGlobalTime >= mFinalTime)
+		{
+			mContinueSimulation = false;
+			Update_Marking();
+		}
+
+
+		// Determining Enabled Transition with Shortest Remaining Firing Delay
+		// If tied, transition with lowest index is selected
+		// Boolean Check, to save unnecessary computations
+		if (mContinueSimulation == true)
+		{
+			mNumberShortestEnable = 1;
+			mShortestEnableIndex = 0;
+			mAllShortestEnable.clear();
+			mAllShortestEnable.push_back(mEnabledTransitions.at(0));
+
+			// For loop to sort enabled transitions by firing time
+			for (int i = 1; i < NumEnabled; i++)
+			{
+				// Checking if the firing has the shorter firing time than current shortest
+				if (mpTransitions->at(mEnabledTransitions.at(mShortestEnableIndex))->Get_Remaining_Delay() > mpTransitions->at(mEnabledTransitions.at(i))->Get_Remaining_Delay())
+				{
+					mShortestEnableIndex = i;
+					mNumberShortestEnable = 1;
+					mAllShortestEnable.clear();
+					mAllShortestEnable.push_back(mEnabledTransitions.at(mShortestEnableIndex));
+				}
+
+
+				// Checking if the firing has the same firing time as shortest
+				if (mpTransitions->at(mEnabledTransitions.at(mShortestEnableIndex))->Get_Remaining_Delay() == mpTransitions->at(mEnabledTransitions.at(i))->Get_Remaining_Delay() && mShortestEnableIndex != i)
+				{
+					//cout << "Note: Transition Firing Tie Break" << endl;
+					mNumberShortestEnable++;
+					mAllShortestEnable.push_back(mEnabledTransitions.at(i));
+				}
+			}
+
+		}
+
+		if (mContinueSimulation == true)
+		{
+			// Check if the shortest firing time occurs after the next marking
+			if (mpTransitions->at(mEnabledTransitions.at(mShortestEnableIndex))->Get_Remaining_Delay() + mCurrentGlobalTime > NextMarkingTime)
+			{
+				//If it does, record up until to it
+				Update_Marking();
+				Update_Transition_Fire_Count();
+
+				// Fill in the remaining required markings with the current one
+				while (mpTransitions->at(mEnabledTransitions.at(mShortestEnableIndex))->Get_Remaining_Delay() + mCurrentGlobalTime > NextMarkingTime)
+				{
+					mTimeStepMarkings.push_back(*mpCurrentMarking);
+					mTimeStepTransitionFireCounts.push_back(*mpTransitionFireCount);
+					NumberMarkingsDone++;
+					LastMarkingTime = NextMarkingTime;
+					NextMarkingTime += TimeInterval;
+				}
+
+				LastMarkingTime = mFinalTime;
+				
+			}
+		}
+
+		if (mContinueSimulation == true)
+		{
+			// Check that shortest firing time doesn't occur after final time of simulation
+			if (mpTransitions->at(mEnabledTransitions.at(mShortestEnableIndex))->Get_Remaining_Delay() + mCurrentGlobalTime > mFinalTime)
+			{
+				//If it does, stop simulating
+				mContinueSimulation = false;
+				mCurrentGlobalTime = mFinalTime;
+				Update_Marking();
+				Update_Transition_Fire_Count();
+
+				// Fill in the remaining required markings with the current one
+				for (int i = NumberMarkingsDone + 1; i < NumTimeIntervals; i++)
+				{
+					mTimeStepMarkings.push_back(*mpCurrentMarking);
+					mTimeStepTransitionFireCounts.push_back(*mpTransitionFireCount);
+					NumberMarkingsDone++;
+				}
+			}
+		}
+
+		if (mContinueSimulation == true)
+		{
+			// Fire the enabled transition with the shortest firing delay first. 
+			// If there are multiple enabled with the same shortest time.
+			// The first fires then the remaining are re-checked and then also fired.
+
+			// Update Global Time
+			mCurrentGlobalTime = mCurrentGlobalTime + mpTransitions->at(mAllShortestEnable.at(0))->Get_Remaining_Delay();
+			mpTransitions->at(mAllShortestEnable.at(0))->Transition_Fire();
+
+
+			if (mNumberShortestEnable > 1)
+
+			{
+				for (int i = 1; i < mNumberShortestEnable; i++)
+				{
+					mpTransitions->at(mAllShortestEnable.at(i))->Transition_Enabled_Check(mCurrentGlobalTime - mpTransitions->at(mAllShortestEnable.at(0))->Get_Remaining_Delay());
+
+					temp1 = mpTransitions->at(mAllShortestEnable.at(i))->Get_Enabled_Status();
+
+
+					if (temp1 == true)
+					{
+						mpTransitions->at(mAllShortestEnable.at(i))->Transition_Fire();
+
+					}
+					else
+					{
+						cout << "FALSE" << endl;
+					}
+				}
+			}
+
+			// Clear vector of enabled transitions for next iteration
+			mEnabledTransitions.clear();
+		}
+	}
+
+	// ** Not in while loop to avoid continuously overwritting the value, as in this simulation we are only interested in the values at the end
+	//Update Current Marking
+	Update_Marking();
+
+	// Update Transition Fire Count
+	Update_Transition_Fire_Count();
+
+
+	//Save_Matrix_To_File("OutputFiles/Test.dat", Convert_Matrix(TimeStepMarkings));
+	
 }
 
 //=======================================================================
@@ -719,8 +940,113 @@ void Petri_Net_Abstract::Continuous_Simulation_MC(int NumberSimulations)
 // Monte Carlo Continuous Simulation, with a marking record at predefined
 // time intervals
 //=======================================================================
-void Petri_Net_Abstract::Continuous_Simulation_Marking_MC(int NumberSimulations)
+void Petri_Net_Abstract::Continuous_Simulation_Marking_MC(int NumberSimulations, double TimeInterval)
 {
+	//-----------------------------------------------------------
+	// Additional Setting up simulation for marking
+	// Calculating the number Time Intervals
+	double NumTimeIntervals;
+	NumTimeIntervals = ((mFinalTime - mInitialTime) / TimeInterval) + 1;
+
+	// Only works in Debug mode
+	assert(ceil(NumTimeIntervals) == floor(NumTimeIntervals));
+
+	// Print out to cons
+	if (ceil(NumTimeIntervals) != floor(NumTimeIntervals))
+	{
+		cout << "Inteval Size results in a non-integer number of time intervals";
+	}
+
+	// Ensure it is has an integer value
+	NumTimeIntervals = ceil(NumTimeIntervals);
+	//------------------------------------------------------------
+
+	vector<double> tempVector;
+	tempVector.clear();
+	for (int i = 0; i < mNumberPlaces; i++)
+	{
+		tempVector.push_back(0.0);
+	}
+
+ 	mMC_TimeStepMarkings.clear();
+
+	for (int j = 0; j < NumTimeIntervals; j++)
+	{
+		mMC_TimeStepMarkings.push_back(tempVector);
+	}
+
+	tempVector.clear();
+	for (int i = 0; i < mNumberTransitions; i++)
+	{
+		tempVector.push_back(0.0);
+	}
+
+	mMC_TimeStepTransitionFireCounts.clear();
+
+	for (int j = 0; j < NumTimeIntervals; j++)
+	{
+		mMC_TimeStepTransitionFireCounts.push_back(tempVector);
+	}
+	//------------------------------------------------------------
+
+	double SimNum;
+
+	for (int i = 0; i < NumberSimulations; i++)
+	{
+
+		Reset_PN();
+		Continuous_Simulation_Marking(TimeInterval);
+
+		// Used to print out MC progress to console
+		SimNum = double(i);
+		if (i % 500 == 0)
+		{
+			cout << "Simulations Completed: " + to_string(i) << endl;
+		}
+
+
+
+		for (int j = 0; j < NumTimeIntervals; j++)
+		{
+			for (int k = 0; k < mNumberPlaces; k++)
+			{
+				mMC_TimeStepMarkings.at(j).at(k) = mMC_TimeStepMarkings.at(j).at(k) + double(mTimeStepMarkings.at(j).at(k));
+			}
+		}
+
+		for (int j = 0; j < NumTimeIntervals; j++)
+		{
+			for (int k = 0; k < mNumberTransitions; k++)
+			{
+				mMC_TimeStepTransitionFireCounts.at(j).at(k) = mMC_TimeStepTransitionFireCounts.at(j).at(k) + double(mTimeStepTransitionFireCounts.at(j).at(k));
+			}
+		}
+
+	}
+
+	for (int j = 0; j < NumTimeIntervals; j++)
+	{
+		for (int k = 0; k < mNumberPlaces; k++)
+		{
+			mMC_TimeStepMarkings.at(j).at(k) = mMC_TimeStepMarkings.at(j).at(k)/NumberSimulations;		
+		}
+	}
+
+	for (int j = 0; j < NumTimeIntervals; j++)
+	{
+		for (int k = 0; k < mNumberTransitions; k++)
+		{
+			mMC_TimeStepTransitionFireCounts.at(j).at(k) = mMC_TimeStepTransitionFireCounts.at(j).at(k)/NumberSimulations;
+		}
+	}
+
+	// End of MC simulations print out to console
+	cout << "*** All " + to_string(NumberSimulations) + " Simulations Complete ***" << endl;
+	Print_Footer();
+
+	Save_Matrix_To_File(("OutputFiles/MC__TimeStep_Marking_" + mPetriNetName + "_" + to_string(NumberSimulations) + ".dat"), mMC_TimeStepMarkings);
+	Save_Matrix_To_File(("OutputFiles/MC_TimeStep_Transition_Count_" + mPetriNetName + "_" + to_string(NumberSimulations) + ".dat"), mMC_TimeStepTransitionFireCounts);
+
 
 }
 
@@ -802,7 +1128,6 @@ void Petri_Net_Abstract::Save_Double_Vector_To_File(const std::string FileName, 
 //========================================================
 // Save Matrix to File
 //========================================================
-/*
 void Petri_Net_Abstract::Save_Matrix_To_File(const std::string FileName, vector<vector<double>> Matrix_To_Write)
 {
 	// Setting strem file precision
@@ -828,4 +1153,30 @@ void Petri_Net_Abstract::Save_Matrix_To_File(const std::string FileName, vector<
 	// Close file
 	output_file.close();
 }
-*/
+
+//========================================================
+// Convert Unsigned Int Matrix to Double Matrix
+//========================================================
+vector<vector<double>> Petri_Net_Abstract::Convert_Matrix(vector<vector<unsigned int>> Matrix_To_Convert)
+{
+	int a, b;
+	a = Matrix_To_Convert.size();
+	b = Matrix_To_Convert.at(0).size();
+
+	vector<vector<double>> Converted_Matrix;
+	vector<double> tempVector;
+
+
+	// Input Unsigned Int into Double Matrix
+	for (int i = 0; i < a; i++)
+	{
+		tempVector.clear();
+		for (int j = 0; j < b; j++)
+		{
+			tempVector.push_back(double(Matrix_To_Convert.at(i).at(j)));
+		}
+		Converted_Matrix.push_back(tempVector);
+	}
+
+	return Converted_Matrix;
+}

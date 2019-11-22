@@ -28,38 +28,15 @@ int main()
 	PN_Test->Print_Header();
 	PN_Test->Print_Token_Marking();
 	PN_Test->Print_Transition_Properties();
-
-	//PN_Test->Continuous_Simulation();
-	//PN_Test->Print_Transition_Fire_Count();
 	
 	// Monte Carlo Simulation
-	PN_Test->Continuous_Simulation_MC(20000);
+	//PN_Test->Continuous_Simulation_MC(20000);
 
+	// Monte Carlo Similation - Marking
+	PN_Test->Continuous_Simulation_Marking_MC(10000, 200);
 
 	// Clearing objects from memory
 	delete PN_Test;
-
-
-	/*
-	// Matrix Development
-	//cin>>CC; cin>>RR; already done
-	vector<vector<int> > matrix;
-	int RR = 4;
-	int CC = 4;
-
-	for (int i = 0; i < RR; i++)
-	{
-		vector<int> myvector;
-		for (int j = 0; j < CC; j++)
-		{
-			int tempVal = i*j;
-			myvector.push_back(tempVal);
-		}
-		matrix.push_back(myvector);
-	}
-
-	cout << matrix.at(3).at(3) << endl;
-	*/
 
 	//================================================
 	// Code requiring user input to end program

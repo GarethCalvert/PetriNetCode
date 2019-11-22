@@ -283,16 +283,22 @@ double Transition_Abstract::Get_Remaining_Delay()
 //=======================================================================
 void Transition_Abstract::Print_Transition_Properties()
 {
+	// Print out name
 	string temp;
 	cout << endl << "The properties of " << mTransitionName << " are: " << endl;
+
+	// Prints out specific properties of the transition depending on the transition type
 	Transition_Type_Properties();
 
+	// Input Arcs
 	cout << "Input Arcs: "; 
 	for (unsigned int i = 0; i < mNumberInputArcs; i++)
 	{
 		temp = mpInputPlaces->at(i)->Get_Place_Name() + " (" + to_string(mpInputWeights->at(i)) + ") ";
 		cout << temp;
 	}
+
+	// Output Arcs
 	cout << endl << "Output Arcs: ";
 	for (unsigned int i = 0; i < mNumberOutputArcs; i++)
 	{
@@ -303,6 +309,8 @@ void Transition_Abstract::Print_Transition_Properties()
 	{
 		cout << endl << "No Assigned Inhibitor Arcs";
 	}
+
+	// Inhibitor Arcs
 	else
 	{
 		cout << endl << "Inhibitor Arcs: ";

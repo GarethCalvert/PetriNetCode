@@ -18,6 +18,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <tuple>
 #include <fstream>
 using namespace std;
 //=======================================================================
@@ -25,10 +26,16 @@ class Petri_Net_Abstract
 {
 public:
 
+	//====================================
+	// Functions read in input files
+	//====================================
 	vector<vector<int> > Read_Places_Details_Input();
 	vector<vector<double> > Read_Transition_Details_Input();
 	unsigned int** Read_Arcs_Input();
 	
+	//====================================
+	// Functions to create PN structure
+	//====================================
 	void Create_Places_Vector();
 	void Create_Transitions_Vector();
 	void Assign_Arcs();
@@ -49,9 +56,9 @@ public:
 	// Simulation Functions
 	//====================================
 	void Continuous_Simulation();
-	void Continuous_Simulation_Marking();
+	void Continuous_Simulation_Marking(double TimeInterval);
 	void Continuous_Simulation_MC(int NumberSimulations);
-	void Continuous_Simulation_Marking_MC(int NumberSimulations);
+	void Continuous_Simulation_Marking_MC(int NumberSimulations, double TimeInterval);
 	void Test_Simulation();
 	void Reset_PN();
 	void Change_Initial_Marking(vector<unsigned int> NewInitialMarking);
@@ -61,52 +68,71 @@ public:
 	//====================================
 	void Update_Marking();
 	void Update_Transition_Fire_Count();
-	//void RecordTokenMarking();
-	//void SaveTokenMarking();
 
 	//====================================
 	// Other I/O Functions
 	//====================================
 	void Save_Double_Vector_To_File(const std::string FileName, vector<double> Vector_To_Write);
-	//void SaveMatrix(Matrix SaveMatrix, const std::string FileName, const int rows, const int cols, const std::string SavingDescription);
-	//void ReadTransitionTimes(Vector* mSaveTransitionTimes, int rows);
-	//void ReadInputVector(std::string InputFileName, std::vector<double>* SaveVector, int InputDimension);
+	void Save_Matrix_To_File(const std::string FileName, vector<vector<double>> Matrix_To_Write);
+	vector<vector<double>> Convert_Matrix(vector<vector<unsigned int>> Matrix_To_Convert);
 
 protected:
 
+	//====================================
 	// PN Properties
+	//====================================
 	string mPetriNetName;
 	int mNumberPlaces;
 	int mNumberTransitions;
 
+	//====================================
 	// Time Properties
+	//====================================
 	double mInitialTime;
 	double mFinalTime;
 	double mCurrentGlobalTime = 0.0;
 
-	// Vectors of the Place and Transition pointers
+	//====================================
+	// Vectors of the Places & Transitions
+	//====================================
 	vector<Place*>* mpPlaces;
 	vector<Transition_Abstract*>* mpTransitions;
 
+	//====================================
 	// Vector for list of current enabled transitions
+	//====================================
 	vector<unsigned int> mEnabledTransitions;
 
+	//====================================
 	// Vector to store markings
+	//====================================
 	vector<unsigned int>* mpInitialMarking;
 	vector<unsigned int>* mpCurrentMarking;
 	vector<unsigned int>* mpTransitionFireCount;
 	vector<double>* mpMC_Marking;
 	vector<double>* mpMC_TransitionCount;
+	vector<vector<unsigned int>> mTimeStepMarkings;
+	vector<vector<unsigned int>> mTimeStepTransitionFireCounts;
+	vector<vector<double>> mMC_TimeStepMarkings;
+	vector<vector<double>> mMC_TimeStepTransitionFireCounts;
 
-	// Boolean to note Continuous Simulation Status
+	//====================================
+	// Continuous Simulation Status
+	//====================================
 	bool mContinueSimulation = true;
 
+	//====================================
 	// Int for firing correct transition
+	//====================================
 	unsigned int mNumberShortestEnable;
 	unsigned int mShortestEnableIndex;
 	vector<unsigned int> mAllShortestEnable;
 
-	// Used to count how many simulations have occured using the same instance, aids file output names
+	//====================================
+	// Used to count how many simulations 
+	// have occured using the same instance, 
+	// aids file output names
+	//====================================
 	unsigned int mSimulationIteration;
 
 };
