@@ -21,6 +21,9 @@ public:
 	// Pure virtual functions from Transition Abstract
 	void Transition_Resample();
 
+	// Virtual Function - overwritten
+	void Transition_Fire();
+
 	// Function to print out properties
 	void Transition_Type_Properties();
 

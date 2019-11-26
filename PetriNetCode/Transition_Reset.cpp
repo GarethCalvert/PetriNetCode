@@ -13,8 +13,6 @@
 //=======================================================================
 Transition_Reset::Transition_Reset(string TransitionName, unsigned int NumberIn, unsigned int NumberOut, unsigned int NumberInhibitorArcs, unsigned int NumberResetArcs, char DistributionCode, unsigned int NumberParameters, vector<double> Parameters)
 {
-	
-
 	// Transition Properties
 	mTransitionName = TransitionName;
 	mNumberInputArcs = NumberIn;
@@ -63,11 +61,84 @@ Transition_Reset::~Transition_Reset()
 }
 
 //=======================================================================
+// Transition Fire - Defined for Reset Transition
+//=======================================================================
+void Transition_Reset::Transition_Fire()
+{
+	// Transition Resets Marking before firing
+	for (int i = 0; i < mNumberResetArcs; i++)
+	{
+		mpResetPlaces->at(i)->Change_Marking(mpResetWeights->at(i));
+	}
+
+
+	// *** Traditional Transition Fire Onwards ***
+	// Remove Tokens from Input Places
+	for (unsigned int i = 0; i < mNumberInputArcs; i++)
+	{
+		mpInputPlaces->at(i)->Remove_Tokens(mpInputWeights->at(i));
+	}
+
+	// Add Tokens to Output Places
+	for (unsigned int i = 0; i < mNumberOutputArcs; i++)
+	{
+		mpOutputPlaces->at(i)->Add_Tokens(mpOutputWeights->at(i));
+	}
+
+	mTransitionEnabled = false;
+	mNumberTransitionFires++;
+
+	// Resampling a new transition delay for the transition using the any pre-defined distribution
+	Transition_Resample();
+}
+
+//=======================================================================
 // Definition for the pure virtual function from Transition_Abstract
 //=======================================================================
 void Transition_Reset::Transition_Resample()
 {
+	if (mDistributionCode == 'E')
+	{
+		mTransitionDelay = -1 * (mpParameters->at(0)) * log(Get_Uniform_Distributed_Random_Number());
+	}
+	else if (mDistributionCode == 'W')
+	{
+		double eta, beta;
+		// mpParameters->at(0) is the Scale Parameter
+		// mpParameters->at(1) is the Shape Parameter
+		mTransitionDelay = (mpParameters->at(0)) * pow((-1 * log(Get_Uniform_Distributed_Random_Number())), (1 / (mpParameters->at(1))));
+	}
+	else if (mDistributionCode == 'N')
+	{
+		double X = 0.0;
+		// mpParameters->at(0) is the Mean
+		// mpParameters->at(1) is the SD
+		for (int i = 0; i < 12; i++)
+		{
+			X = +Get_Uniform_Distributed_Random_Number();
+		}
 
+		mTransitionDelay = (X - 6) * (mpParameters->at(1)) + mpParameters->at(0);
+
+		while (mTransitionDelay < 0)
+		{
+			double X = 0.0;
+			// mpParameters->at(0) is the Mean
+			// mpParameters->at(1) is the SD
+			for (int i = 0; i < 12; i++)
+			{
+				X = +Get_Uniform_Distributed_Random_Number();
+			}
+
+			mTransitionDelay = (X - 6) * (mpParameters->at(1)) + mpParameters->at(0);
+		}
+	}
+
+	// Reset of timing variables
+	mTransitionEnabled = false;
+	mTransitionInhibited = false;
+	mCumulativeTime = 0.0;
+	mRemainingDelay = mTransitionDelay;
 }
 
 //=======================================================================
