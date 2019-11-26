@@ -58,6 +58,14 @@ void Place::Change_Initial_Marking(int InitialTokenCount)
 }
 
 //=======================================================================
+// Change Marking
+//=======================================================================
+void Place::Change_Marking(int NewTokenCount)
+{
+	mCurrentTokenCount = NewTokenCount;
+}
+
+//=======================================================================
 // Accessor to Place Name
 //=======================================================================
 string Place::Get_Place_Name()

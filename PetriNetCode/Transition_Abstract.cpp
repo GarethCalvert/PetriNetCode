@@ -63,12 +63,29 @@ void Transition_Abstract::Set_Inhibitor_Arc(Place *InhibitorPlace, unsigned int 
 }
 
 //=======================================================================
+// Add a reset place to the reset place vector for the transition
+//=======================================================================
+void Transition_Abstract::Set_Reset_Arc(Place* ResetPlace, unsigned int ResetWeight)
+{
+	mpResetPlaces->push_back(&*ResetPlace);
+	mpResetWeights->push_back(ResetWeight);
+}
+
+//=======================================================================
 // Function included here, so that each unique transition type can print
 // transition properties out
 //=======================================================================
 void Transition_Abstract::Transition_Type_Properties()
 {
 
+}
+
+//=======================================================================
+// Return Transition Code as an unsigned int
+//=======================================================================
+unsigned int Transition_Abstract::Get_Transition_Code()
+{
+	return mTransitionCode;
 }
 
 //=======================================================================

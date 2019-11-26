@@ -33,12 +33,14 @@ class Transition_Abstract
 		void Set_Input_Arc(Place* InputPlace, unsigned int InputWeight);
 		void Set_Output_Arc(Place* OutputPlace, unsigned int OutputWeight);
 		void Set_Inhibitor_Arc(Place* InhibitorPlace, unsigned int InhibitorWeight);
+		void Set_Reset_Arc(Place* ResetPlace, unsigned int ResetWeight);
 		
 		bool Get_Enabled_Status();
 		double Get_Uniform_Distributed_Random_Number();
 
 		// Accessor Functions
 		string Get_Transition_Name();
+		unsigned int Get_Transition_Code();
 		unsigned int Get_Number_Input_Arcs();
 		unsigned int Get_Number_Output_Arcs();
 		unsigned int Get_Number_Inhibitor_Arcs();
@@ -64,9 +66,11 @@ class Transition_Abstract
 		vector<Place*>* mpInputPlaces;
 		vector<Place*>* mpOutputPlaces;
 		vector<Place*>* mpInhibitorPlaces;
+		vector<Place*>* mpResetPlaces;
 		vector<unsigned int>* mpInputWeights;
 		vector<unsigned int>* mpOutputWeights;
 		vector<unsigned int>* mpInhibitorWeights;
+		vector<unsigned int>* mpResetWeights;
 
 		// Timing variables
 		double mCumulativeTime;

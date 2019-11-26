@@ -30,10 +30,10 @@ int main()
 	PN_Test->Print_Transition_Properties();
 	
 	// Monte Carlo Simulation
-	//PN_Test->Continuous_Simulation_MC(20000);
+	PN_Test->Continuous_Simulation_MC(10000);
 
 	// Monte Carlo Similation - Marking
-	PN_Test->Continuous_Simulation_Marking_MC(10000, 200);
+	//PN_Test->Continuous_Simulation_Marking_MC(100000, 0.1);
 
 	// Clearing objects from memory
 	delete PN_Test;

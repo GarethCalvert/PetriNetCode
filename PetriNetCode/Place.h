@@ -23,6 +23,7 @@ public:
 	void Reset_To_Initial_Marking();
 	void Print_Place_Marking();
 	void Change_Initial_Marking(int InitialTokenCount);
+	void Change_Marking(int NewTokenCount); // Used for reset transitions
 
 	// Accessor Functions
 	string Get_Place_Name();

@@ -137,7 +137,7 @@ void Petri_Net_Abstract::Update_Transition_Fire_Count()
 vector<vector<int> > Petri_Net_Abstract::Read_Places_Details_Input()
 {
 	// Opening the file
-	std::ifstream read_file("InputFiles/Places_Details_" + mPetriNetName +".txt");
+	std::ifstream read_file("InputFiles/" + mPetriNetName + "_Places_Details.txt");
 	assert(read_file.is_open());
 
 	// Determine length of the file
@@ -181,32 +181,32 @@ vector<vector<double> > Petri_Net_Abstract::Read_Transition_Details_Input()
 {
 	//============================================================
 	// Opening the file
-	std::ifstream read_file("InputFiles/Transitions_Global_Details_" + mPetriNetName + ".txt");
+	std::ifstream read_file("InputFiles/" + mPetriNetName+ "_Transitions_Global_Details.txt");
 	assert(read_file.is_open());
 
 	// Determine length of the file
-	double dummy_var1, dummy_var2, dummy_var3, dummy_var4, dummy_var5, dummy_var6, dummy_var7, dummy_var8, dummy_var9, dummy_var10, dummy_var11;
+	double dummy_var1, dummy_var2, dummy_var3, dummy_var4, dummy_var5, dummy_var6, dummy_var7, dummy_var8, dummy_var9, dummy_var10, dummy_var11, dummy_var12, dummy_var13;
 	int no_entries = 0;
 	while (!read_file.eof())
 	{
-		read_file >> dummy_var1 >> dummy_var2 >> dummy_var3 >> dummy_var4 >> dummy_var5 >> dummy_var6 >> dummy_var7 >> dummy_var8 >> dummy_var9 >> dummy_var10 >> dummy_var11;
+		read_file >> dummy_var1 >> dummy_var2 >> dummy_var3 >> dummy_var4 >> dummy_var5 >> dummy_var6 >> dummy_var7 >> dummy_var8 >> dummy_var9 >> dummy_var10 >> dummy_var11 >> dummy_var12 >> dummy_var13;
 		no_entries++;
 	}
 
-	no_entries--; // Correcting to the appropriate value
+	//no_entries--; // Correcting to the appropriate value
 
 	// Rewind to the beginning 
 	read_file.clear();
 	read_file.seekg(std::ios::beg);
 
 	// Allocating memory for vector
-	vector<double> Initial(11, 0);
+	vector<double> Initial(13, 0);
 	vector<vector<double> > Transition_Details(no_entries, Initial);
 
 	// Input data from the file
 	for (int i = 0; i < no_entries; i++)
 	{
-		read_file >> Transition_Details[i][0] >> Transition_Details[i][1] >> Transition_Details[i][2] >> Transition_Details[i][3] >> Transition_Details[i][4] >> Transition_Details[i][5] >> Transition_Details[i][6] >> Transition_Details[i][7] >> Transition_Details[i][8] >> Transition_Details[i][9] >> Transition_Details[i][10];
+		read_file >> Transition_Details[i][0] >> Transition_Details[i][1] >> Transition_Details[i][2] >> Transition_Details[i][3] >> Transition_Details[i][4] >> Transition_Details[i][5] >> Transition_Details[i][6] >> Transition_Details[i][7] >> Transition_Details[i][8] >> Transition_Details[i][9] >> Transition_Details[i][10] >> Transition_Details[i][11] >> Transition_Details[i][12];
 	}
 
 	read_file.close();
@@ -223,7 +223,7 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 	//============================================================
 	// Opening the file
 	std::ifstream myfile; // Define Input Stream
-	myfile.open("InputFiles/Arcs_Details_" + mPetriNetName + ".txt"); // Open file
+	myfile.open("InputFiles/"+ mPetriNetName + "_Arcs_Details.txt"); // Open file
 	assert(myfile.is_open()); // Check file is open
 
 	// Allocating memory for vector
@@ -243,11 +243,11 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 	
 	int Size_InputString = InputString.size();
 
-	assert(Size_InputString == mNumberTransitions*8);
+	assert(Size_InputString == mNumberTransitions*9);
 
-	unsigned int** Arc_Details = new unsigned int* [mNumberTransitions*8];
+	unsigned int** Arc_Details = new unsigned int* [int(mNumberTransitions)*9];
 
-	unsigned int Vector_Index = 0;
+	int Vector_Index = 0;
 	int n, index;
 
 	for (int i = 0; i < mNumberTransitions; i++)
@@ -259,9 +259,12 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 		Arc_Details[Vector_Index+3] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Output_Arcs())+1];
 		Arc_Details[Vector_Index+4] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Inhibitor_Arcs())+1];
 		Arc_Details[Vector_Index+5] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Inhibitor_Arcs())+1];
-
-		Arc_Details[Vector_Index+6] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Causal_Arcs()) + 1];
+		
+		Arc_Details[Vector_Index+6] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Reset_Arcs()) + 1];
 		Arc_Details[Vector_Index+7] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Reset_Arcs()) + 1];
+
+		Arc_Details[Vector_Index+8] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Causal_Arcs()) + 1];
+		
 		
 		
 		// First Row is Input Arc Places
@@ -321,8 +324,9 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 			Arc_Details[Vector_Index+5][index] = n;
 			index++;
 		}
-		
-		// Seventh Row is Causal Arc Places
+
+		// Seventh Row is Reset Arc Places
+
 		stream = stringstream(InputString.at(Vector_Index + 6));
 		index = 0;
 		while (stream >> n)
@@ -332,7 +336,7 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 		}
 
 		// Eighth Row is Reset Arc Places
-		
+
 		stream = stringstream(InputString.at(Vector_Index + 7));
 		index = 0;
 		while (stream >> n)
@@ -341,8 +345,17 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 			index++;
 		}
 		
+		// Ninth Row is Causal Arc Places
+		stream = stringstream(InputString.at(Vector_Index + 8));
+		index = 0;
+		while (stream >> n)
+		{
+			Arc_Details[Vector_Index + 8][index] = n;
+			index++;
+		}
+		
 
-		Vector_Index = Vector_Index + 8;
+		Vector_Index = Vector_Index + 9;
 	}
 	return Arc_Details;
 }
@@ -390,47 +403,55 @@ void Petri_Net_Abstract::Create_Transitions_Vector()
 		// If it is a deterministic transition
 		if (Transition_Details[i][1] == 1)
 		{
-			assert(Transition_Details[i][10]>=0.0);
-			mpTransitions->push_back(new Transition_Deterministic("T" + to_string(i + 1), Transition_Details[i][2], Transition_Details[i][3], Transition_Details[i][4], Transition_Details[i][10]));
+			assert(Transition_Details[i][12]>=0.0);
+			mpTransitions->push_back(new Transition_Deterministic("T" + to_string(i + 1), Transition_Details[i][2], Transition_Details[i][3], Transition_Details[i][4], Transition_Details[i][12]));
 		}
 		// If it is a stochastic transition
 		else if (Transition_Details[i][1] == 2)
 		{
 			double tempNumPar; vector<double> tempParameters[3];
 			
-			if (Transition_Details[i][6] == 1)
+			if (Transition_Details[i][8] == 1)
 			{
 				tempNumPar = 1;
-				tempParameters->push_back(Transition_Details[i][7]);
+				tempParameters->push_back(Transition_Details[i][9]);
 			}
-			else if (Transition_Details[i][6] == 2)
+			else if (Transition_Details[i][8] == 2)
 			{
 				tempNumPar = 2;
-				tempParameters->push_back(Transition_Details[i][7]);
-				tempParameters->push_back(Transition_Details[i][8]);
+				tempParameters->push_back(Transition_Details[i][9]);
+				tempParameters->push_back(Transition_Details[i][10]);
 			}
 
-			else if (Transition_Details[i][6] == 3)
+			else if (Transition_Details[i][8] == 3)
 			{
 				tempNumPar = 3;
-				tempParameters->push_back(Transition_Details[i][7]);
-				tempParameters->push_back(Transition_Details[i][8]);
 				tempParameters->push_back(Transition_Details[i][9]);
+				tempParameters->push_back(Transition_Details[i][10]);
+				tempParameters->push_back(Transition_Details[i][11]);
 			}
 			else
 			{
-				cout << "ERROR: Number of Parameters does correspond to one, two or three" << endl;
+				cout << "ERROR: Number of parameters does correspond to one, two or three" << endl;
 				tempNumPar = 999;
 			}
 
 			char tempDistributionCode;
-			if (Transition_Details[i][5] == 1)
+			if (Transition_Details[i][7] == 1)
 			{
 				tempDistributionCode = 'E';
 			}
-			else if (Transition_Details[i][5] == 2)
+			else if (Transition_Details[i][7] == 2)
 			{
 				tempDistributionCode = 'W';
+			}
+			else if (Transition_Details[i][7] == 3)
+			{
+				tempDistributionCode = 'N';
+			}
+			else if (Transition_Details[i][7] == 4)
+			{
+				tempDistributionCode = 'F';
 			}
 			else
 			{
@@ -445,7 +466,8 @@ void Petri_Net_Abstract::Create_Transitions_Vector()
 		// If it is a reset transition
 		else if (Transition_Details[i][1] == 3)
 		{
-			mpTransitions->push_back(new Transition_Reset());
+			assert(Transition_Details[i][5] > 0.0);
+			//mpTransitions->push_back(new Transition_Reset());
 		}
 		else
 		{
@@ -465,17 +487,21 @@ void Petri_Net_Abstract::Assign_Arcs()
 
 	//cout << Arc_Details[0][1] << endl;
 
-	int inputIndex, inputWeightIndex, outputIndex, outputWeightIndex, inhibIndex, inhibWeightsIndex;
+	int inputIndex, inputWeightIndex, outputIndex, outputWeightIndex, inhibIndex, inhibWeightsIndex, resetIndex, resetWeightsIndex, conditionalIndex;
 
 	// Loop to go through each transition and assign the appropriate arcs
 	for (unsigned int i = 0; i<mNumberTransitions; i++)
 	{
-		inputIndex = ((i*8)+ 1)-1; 
-		inputWeightIndex = ((i*8)+ 2)-1;
-		outputIndex = ((i*8)+3)-1;
-		outputWeightIndex = ((i*8)+4)-1;
-		inhibIndex = ((i*8)+5)-1;
-		inhibWeightsIndex = ((i*8)+6)-1;
+		inputIndex = ((i*9)+ 1)-1; 
+		inputWeightIndex = ((i*9)+ 2)-1;
+		outputIndex = ((i*9)+3)-1;
+		outputWeightIndex = ((i*9)+4)-1;
+		inhibIndex = ((i*9)+5)-1;
+		inhibWeightsIndex = ((i*9)+6)-1;
+		resetIndex = ((i * 9) + 7) - 1;
+		resetWeightsIndex = ((i * 9) + 8) - 1;
+		conditionalIndex = ((i * 9) + 9) - 1;
+
 
 		// Setting input arcs
 		for (unsigned int a = 0; a<mpTransitions->at(i)->Get_Number_Input_Arcs(); a++)
@@ -495,6 +521,14 @@ void Petri_Net_Abstract::Assign_Arcs()
 			mpTransitions->at(i)->Set_Inhibitor_Arc(mpPlaces->at(Arc_Details[inhibIndex][a+1]-1), Arc_Details[inhibWeightsIndex][a+1]);
 		}
 
+		// Setting Reset arcs, for reset arcs only
+		if (mpTransitions->at(i)->Get_Transition_Code() == 3)
+		{
+			for (unsigned int a = 0; a < mpTransitions->at(i)->Get_Number_Reset_Arcs(); a++)
+			{
+				mpTransitions->at(i)->Set_Reset_Arc(mpPlaces->at(Arc_Details[resetIndex][a + 1] - 1), Arc_Details[resetWeightsIndex][a + 1]);
+			}
+		}
 	}
 
 }
@@ -682,7 +716,6 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking(double TimeInterval)
 	unsigned int NumberMarkingsDone = 1;
 	NextMarkingTime = mInitialTime + TimeInterval;
 
-
 	//-----------------------------------------------------------
 	// Setting up simulation
 	mContinueSimulation = true;
@@ -721,7 +754,8 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking(double TimeInterval)
 			Update_Transition_Fire_Count();
 
 			// Fill in the remaining required markings with the current one
-			for (int i = NumberMarkingsDone + 1; i < NumTimeIntervals; i++)
+			for (int i = NumberMarkingsDone; i <=NumTimeIntervals; i++)
+			//for (int i = NumberMarkingsDone + 1; i < NumTimeIntervals; i++)
 			{
 				mTimeStepMarkings.push_back(*mpCurrentMarking);
 				mTimeStepTransitionFireCounts.push_back(*mpTransitionFireCount);
@@ -810,7 +844,8 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking(double TimeInterval)
 				Update_Transition_Fire_Count();
 
 				// Fill in the remaining required markings with the current one
-				for (int i = NumberMarkingsDone + 1; i < NumTimeIntervals; i++)
+				for (int i = NumberMarkingsDone; i <= NumTimeIntervals; i++)
+				//for (int i = NumberMarkingsDone + 1; i < NumTimeIntervals; i++)
 				{
 					mTimeStepMarkings.push_back(*mpCurrentMarking);
 					mTimeStepTransitionFireCounts.push_back(*mpTransitionFireCount);
@@ -890,8 +925,7 @@ void Petri_Net_Abstract::Continuous_Simulation_MC(int NumberSimulations)
 
 	for (int i = 0; i < NumberSimulations; i++)
 	{
-		
-		Reset_PN();
+		Reset_PN(); 
 		Continuous_Simulation();
 
 		// Used to print out MC progress to console
@@ -931,8 +965,8 @@ void Petri_Net_Abstract::Continuous_Simulation_MC(int NumberSimulations)
 	Print_MC_Marking(NumberSimulations);
 	Print_MC_Transition_Count(NumberSimulations);
 
-	Save_Double_Vector_To_File(("OutputFiles/MC_Marking_" + mPetriNetName + "_" + to_string(NumberSimulations) + ".csv"), *mpMC_Marking);
-	Save_Double_Vector_To_File(("OutputFiles/MC_Transition_Count_" + mPetriNetName + "_" + to_string(NumberSimulations) + ".csv"), *mpMC_TransitionCount);
+	Save_Double_Vector_To_File(("OutputFiles/"+mPetriNetName +"_MC_Marking_" + to_string(NumberSimulations) + ".dat"), *mpMC_Marking);
+	Save_Double_Vector_To_File(("OutputFiles/"+mPetriNetName +"_MC_Transition_Count_" + to_string(NumberSimulations) + ".dat"), *mpMC_TransitionCount);
 
 }
 
@@ -959,6 +993,8 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking_MC(int NumberSimulations,
 
 	// Ensure it is has an integer value
 	NumTimeIntervals = ceil(NumTimeIntervals);
+
+	
 	//------------------------------------------------------------
 
 	vector<double> tempVector;
@@ -993,7 +1029,6 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking_MC(int NumberSimulations,
 
 	for (int i = 0; i < NumberSimulations; i++)
 	{
-
 		Reset_PN();
 		Continuous_Simulation_Marking(TimeInterval);
 
@@ -1009,8 +1044,9 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking_MC(int NumberSimulations,
 		for (int j = 0; j < NumTimeIntervals; j++)
 		{
 			for (int k = 0; k < mNumberPlaces; k++)
-			{
+			{	//cout << "Test";
 				mMC_TimeStepMarkings.at(j).at(k) = mMC_TimeStepMarkings.at(j).at(k) + double(mTimeStepMarkings.at(j).at(k));
+				//cout << "Test1";
 			}
 		}
 
@@ -1044,8 +1080,8 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking_MC(int NumberSimulations,
 	cout << "*** All " + to_string(NumberSimulations) + " Simulations Complete ***" << endl;
 	Print_Footer();
 
-	Save_Matrix_To_File(("OutputFiles/MC__TimeStep_Marking_" + mPetriNetName + "_" + to_string(NumberSimulations) + ".dat"), mMC_TimeStepMarkings);
-	Save_Matrix_To_File(("OutputFiles/MC_TimeStep_Transition_Count_" + mPetriNetName + "_" + to_string(NumberSimulations) + ".dat"), mMC_TimeStepTransitionFireCounts);
+	Save_Matrix_To_File(("OutputFiles/"+mPetriNetName+ "_MC_TimeStep_Marking_" + to_string(NumberSimulations) + ".dat"), mMC_TimeStepMarkings);
+	Save_Matrix_To_File(("OutputFiles/"+mPetriNetName + "_MC_TimeStep_Transition_Count_" + to_string(NumberSimulations) + ".dat"), mMC_TimeStepTransitionFireCounts);
 
 
 }

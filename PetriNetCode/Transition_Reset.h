@@ -13,7 +13,7 @@ class Transition_Reset :
 public:
 
 	// Specialised Constructor
-	Transition_Reset();
+	Transition_Reset(string TransitionName, unsigned int NumberIn, unsigned int NumberOut, unsigned int NumberInhibitorArcs, unsigned int NumberResetArcs, char DistributionCode, unsigned int NumberParameters, vector<double> Parameters);
 
 	// Destructor
 	~Transition_Reset();
@@ -23,5 +23,15 @@ public:
 
 	// Function to print out properties
 	void Transition_Type_Properties();
+
+private:
+
+	// Distribution Variables
+	char mDistributionCode;
+	unsigned int mNumberParameters;
+	vector<double>* mpParameters;
+
+	
+
 };
 

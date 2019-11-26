@@ -18,7 +18,7 @@ Transition_Stochastic::Transition_Stochastic(string TransitionName, unsigned int
 	mNumberInputArcs = NumberIn;
 	mNumberOutputArcs = NumberOut;
 	mNumberInhibitorArcs = NumberInhibitorArcs;
-	mTransitionCode = 2; // Code is 1 for Deterministic Transitions
+	mTransitionCode = 2; // Code is 2 for Stochastic Transitions
 
 	// Properties of the probability distribution for sampling times
 	mDistributionCode = DistributionCode;
@@ -64,16 +64,39 @@ void Transition_Stochastic::Transition_Resample()
 {
 	if (mDistributionCode == 'E')
 	{
-		double alpha;
-		alpha = mpParameters->at(0);
-		mTransitionDelay = -1 * alpha*log(Get_Uniform_Distributed_Random_Number());
+		mTransitionDelay = -1 * (mpParameters->at(0))*log(Get_Uniform_Distributed_Random_Number());
 	}
 	else if (mDistributionCode == 'W')
 	{
 		double eta, beta;
-		eta = mpParameters->at(0); // Scale Parameter
-		beta = mpParameters->at(1); // Shape Parameter
-		mTransitionDelay = eta * pow((-1 * log(Get_Uniform_Distributed_Random_Number())), (1 / beta));
+		// mpParameters->at(0) is the Scale Parameter
+		// mpParameters->at(1) is the Shape Parameter
+		mTransitionDelay = (mpParameters->at(0)) * pow((-1 * log(Get_Uniform_Distributed_Random_Number())), (1 / (mpParameters->at(1))));
+	}
+	else if (mDistributionCode == 'N')
+	{
+		double X = 0.0;
+		// mpParameters->at(0) is the Mean
+		// mpParameters->at(1) is the SD
+		for (int i = 0; i < 12; i++)
+		{
+			X = +Get_Uniform_Distributed_Random_Number();
+		}
+
+		mTransitionDelay = (X-6)*(mpParameters->at(1)) + mpParameters->at(0);
+
+		while (mTransitionDelay < 0)
+		{
+			double X = 0.0;
+			// mpParameters->at(0) is the Mean
+			// mpParameters->at(1) is the SD
+			for (int i = 0; i < 12; i++)
+			{
+				X = +Get_Uniform_Distributed_Random_Number();
+			}
+
+			mTransitionDelay = (X - 6) * (mpParameters->at(1)) + mpParameters->at(0);
+		}
 	}
 
 	// Reset of timing variables
@@ -110,6 +133,11 @@ void Transition_Stochastic::Transition_Type_Properties()
 	{
 		cout << "Stochastic Transition: Weibull Distribution" << endl;
 		cout << "Parameters: " + to_string(mpParameters->at(0)) + ", "+ to_string(mpParameters->at(1)) << endl;
+	}
+	else if (mDistributionCode == 'N')
+	{
+		cout << "Stochastic Transition: Normal Distribution" << endl;
+		cout << "Parameters: " + to_string(mpParameters->at(0)) + ", " + to_string(mpParameters->at(1)) << endl;
 	}
 
 }
