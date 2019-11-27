@@ -65,12 +65,13 @@ Transition_Reset::~Transition_Reset()
 //=======================================================================
 void Transition_Reset::Transition_Fire()
 {
+	cout << "Transition Fire" << endl;
+
 	// Transition Resets Marking before firing
 	for (int i = 0; i < mNumberResetArcs; i++)
 	{
 		mpResetPlaces->at(i)->Change_Marking(mpResetWeights->at(i));
 	}
-
 
 	// *** Traditional Transition Fire Onwards ***
 	// Remove Tokens from Input Places
@@ -148,6 +149,17 @@ void Transition_Reset::Transition_Resample()
 void Transition_Reset::Transition_Type_Properties()
 {
 	cout << "Reset Transition: " + to_string(mNumberResetArcs) + " Reset Arcs"<<endl;
+
+	cout << "Reset Arcs: ";
+
+	string temp;
+	for (unsigned int i = 0; i < mNumberResetArcs; i++)
+	{
+		temp = mpResetPlaces->at(i)->Get_Place_Name() + " (" + to_string(mpResetWeights->at(i)) + ") ";
+		cout << temp;
+	}
+
+	cout << endl;
 
 	if (mDistributionCode == 'E')
 	{

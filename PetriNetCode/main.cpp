@@ -22,7 +22,7 @@ int main()
 {
 	//Petri_Net_Custom
 	Petri_Net_Custom* PN_Test;
-	PN_Test = new Petri_Net_Custom("Comp_Net", 0, 200000);
+	PN_Test = new Petri_Net_Custom("Insp_Metal_Det_Ind", 0, 25);
 
 	// Initial PN configuration print out
 	PN_Test->Print_Header();
@@ -30,10 +30,10 @@ int main()
 	PN_Test->Print_Transition_Properties();
 	
 	// Monte Carlo Simulation
-	PN_Test->Continuous_Simulation_MC(10000);
+	PN_Test->Continuous_Simulation_MC(20000);
 
 	// Monte Carlo Similation - Marking
-	//PN_Test->Continuous_Simulation_Marking_MC(100000, 0.1);
+	//PN_Test->Continuous_Simulation_Marking_MC(10000, 1);
 
 	// Clearing objects from memory
 	delete PN_Test;

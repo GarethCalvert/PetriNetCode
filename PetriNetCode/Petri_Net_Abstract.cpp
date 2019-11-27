@@ -252,17 +252,14 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 
 	for (int i = 0; i < mNumberTransitions; i++)
 	{
-		
 		Arc_Details[Vector_Index] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Input_Arcs())+1];
 		Arc_Details[Vector_Index+1] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Input_Arcs())+1];
 		Arc_Details[Vector_Index+2] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Output_Arcs())+1];
 		Arc_Details[Vector_Index+3] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Output_Arcs())+1];
 		Arc_Details[Vector_Index+4] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Inhibitor_Arcs())+1];
 		Arc_Details[Vector_Index+5] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Inhibitor_Arcs())+1];
-		
 		Arc_Details[Vector_Index+6] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Reset_Arcs()) + 1];
 		Arc_Details[Vector_Index+7] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Reset_Arcs()) + 1];
-
 		Arc_Details[Vector_Index+8] = new unsigned int[int(mpTransitions->at(i)->Get_Number_Causal_Arcs()) + 1];
 		
 		
@@ -324,7 +321,7 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 			Arc_Details[Vector_Index+5][index] = n;
 			index++;
 		}
-
+	
 		// Seventh Row is Reset Arc Places
 
 		stream = stringstream(InputString.at(Vector_Index + 6));
@@ -358,6 +355,8 @@ unsigned int** Petri_Net_Abstract::Read_Arcs_Input()
 		Vector_Index = Vector_Index + 9;
 	}
 	return Arc_Details;
+
+	
 }
 
 //=======================================================================
@@ -466,8 +465,57 @@ void Petri_Net_Abstract::Create_Transitions_Vector()
 		// If it is a reset transition
 		else if (Transition_Details[i][1] == 3)
 		{
+			unsigned int tempNumPar; vector<double> tempParameters[3];
+
+			if (Transition_Details[i][8] == 1)
+			{
+				tempNumPar = 1;
+				tempParameters->push_back(Transition_Details[i][9]);
+			}
+			else if (Transition_Details[i][8] == 2)
+			{
+				tempNumPar = 2;
+				tempParameters->push_back(Transition_Details[i][9]);
+				tempParameters->push_back(Transition_Details[i][10]);
+			}
+
+			else if (Transition_Details[i][8] == 3)
+			{
+				tempNumPar = 3;
+				tempParameters->push_back(Transition_Details[i][9]);
+				tempParameters->push_back(Transition_Details[i][10]);
+				tempParameters->push_back(Transition_Details[i][11]);
+			}
+			else
+			{
+				cout << "ERROR: Number of parameters does correspond to one, two or three" << endl;
+				tempNumPar = 999;
+			}
+
+			char tempDistributionCode;
+			if (Transition_Details[i][7] == 1)
+			{
+				tempDistributionCode = 'E';
+			}
+			else if (Transition_Details[i][7] == 2)
+			{
+				tempDistributionCode = 'W';
+			}
+			else if (Transition_Details[i][7] == 3)
+			{
+				tempDistributionCode = 'N';
+			}
+			else if (Transition_Details[i][7] == 4)
+			{
+				tempDistributionCode = 'F';
+			}
+			else
+			{
+				cout << "ERROR: Input Distribution Code is not configured in code" << endl;
+			}
+
 			assert(Transition_Details[i][5] > 0.0);
-			//mpTransitions->push_back(new Transition_Reset());
+			mpTransitions->push_back(new Transition_Reset("T" + to_string(i + 1), unsigned int(Transition_Details[i][2]), unsigned int(Transition_Details[i][3]), unsigned int(Transition_Details[i][4]), unsigned int(Transition_Details[i][5]), tempDistributionCode, tempNumPar, *tempParameters));
 		}
 		else
 		{
@@ -652,6 +700,8 @@ void Petri_Net_Abstract::Continuous_Simulation()
 					if (temp1 == true)
 					{
 					mpTransitions->at(mAllShortestEnable.at(i))->Transition_Fire();
+					//Update_Marking();
+					//Print_Token_Marking();
 
 					}
 					else
@@ -878,7 +928,6 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking(double TimeInterval)
 					if (temp1 == true)
 					{
 						mpTransitions->at(mAllShortestEnable.at(i))->Transition_Fire();
-
 					}
 					else
 					{
