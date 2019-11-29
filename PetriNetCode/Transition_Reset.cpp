@@ -65,8 +65,6 @@ Transition_Reset::~Transition_Reset()
 //=======================================================================
 void Transition_Reset::Transition_Fire()
 {
-	cout << "Transition Fire" << endl;
-
 	// Transition Resets Marking before firing
 	for (int i = 0; i < mNumberResetArcs; i++)
 	{

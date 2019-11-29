@@ -159,7 +159,7 @@
     <ClInclude Include="Petri_Net_Custom.h" />
     <ClInclude Include="Place.h" />
     <ClInclude Include="Transition_Abstract.h" />
-    <ClInclude Include="Transition_BN.h" />
+    <ClInclude Include="Transition_DC.h" />
     <ClInclude Include="Transition_Deterministic.h" />
     <ClInclude Include="Transition_Reset.h" />
     <ClInclude Include="Transition_Stochastic.h" />
@@ -177,7 +177,7 @@
     <ClCompile Include="Place.cpp" />
     <ClCompile Include="main_old_material.cpp" />
     <ClCompile Include="Transition_Abstract.cpp" />
-    <ClCompile Include="Transition_BN.cpp" />
+    <ClCompile Include="Transition_DC.cpp" />
     <ClCompile Include="Transition_Deterministic.cpp" />
     <ClCompile Include="Transition_Reset.cpp" />
     <ClCompile Include="Transition_Stochastic.cpp" />

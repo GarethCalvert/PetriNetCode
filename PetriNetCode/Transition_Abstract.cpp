@@ -72,6 +72,14 @@ void Transition_Abstract::Set_Reset_Arc(Place* ResetPlace, unsigned int ResetWei
 }
 
 //=======================================================================
+// Add a reset place to the reset place vector for the transition
+//=======================================================================
+void Transition_Abstract::Set_Causal_Arc(Place* CausalPlace)
+{
+	mpCausalPlaces->push_back(&*CausalPlace);
+}
+
+//=======================================================================
 // Function included here, so that each unique transition type can print
 // transition properties out
 //=======================================================================
@@ -152,6 +160,7 @@ void Transition_Abstract::Transition_Enabled_Check(double GlobalTime)
 	// If Inhibitor Arcs are present, check their status
 	if (mNumberInhibitorArcs > 0)
 	{
+		mTransitionInhibited = false;
 		for (unsigned int i = 0; i < mNumberInhibitorArcs; i++)
 		{
 			if (mpInhibitorPlaces->at(i)->Get_Place_Marking() >= mpInhibitorWeights->at(i))

@@ -15,14 +15,20 @@ using namespace std;
 #include "Transition_Abstract.h"
 #include "Transition_Stochastic.h"
 #include "Transition_Deterministic.h"
-#include "Transition_BN.h"
+#include "Transition_DC.h"
 //=======================================================================
 
 int main()
 {
+	// Simulation Parameters
+	double InitialTime = 0.0;
+	double FinalTime = 25.0;
+	double TimeStep = 1.0/52.0;
+	int NumberSimulations = 10;
+
 	//Petri_Net_Custom
 	Petri_Net_Custom* PN_Test;
-	PN_Test = new Petri_Net_Custom("Insp_Metal_Det_Ind", 0, 25);
+	PN_Test = new Petri_Net_Custom("DC_Insp_Metal_Det_Ind", InitialTime, FinalTime);
 
 	// Initial PN configuration print out
 	PN_Test->Print_Header();
@@ -30,10 +36,10 @@ int main()
 	PN_Test->Print_Transition_Properties();
 	
 	// Monte Carlo Simulation
-	PN_Test->Continuous_Simulation_MC(20000);
+	//PN_Test->Continuous_Simulation_MC(NumberSimulations);
 
 	// Monte Carlo Similation - Marking
-	//PN_Test->Continuous_Simulation_Marking_MC(10000, 1);
+	//PN_Test->Continuous_Simulation_Marking_MC(NumberSimulations, TimeStep);
 
 	// Clearing objects from memory
 	delete PN_Test;

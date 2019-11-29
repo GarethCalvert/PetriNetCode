@@ -34,6 +34,7 @@ class Transition_Abstract
 		void Set_Output_Arc(Place* OutputPlace, unsigned int OutputWeight);
 		void Set_Inhibitor_Arc(Place* InhibitorPlace, unsigned int InhibitorWeight);
 		void Set_Reset_Arc(Place* ResetPlace, unsigned int ResetWeight);
+		void Set_Causal_Arc(Place* CausalPlace);
 		
 		bool Get_Enabled_Status();
 		double Get_Uniform_Distributed_Random_Number();
@@ -67,6 +68,7 @@ class Transition_Abstract
 		vector<Place*>* mpOutputPlaces;
 		vector<Place*>* mpInhibitorPlaces;
 		vector<Place*>* mpResetPlaces;
+		vector<Place*>* mpCausalPlaces;
 		vector<unsigned int>* mpInputWeights;
 		vector<unsigned int>* mpOutputWeights;
 		vector<unsigned int>* mpInhibitorWeights;

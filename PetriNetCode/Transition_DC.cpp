@@ -4,7 +4,7 @@
 // functions from the Transition_Abstract class
 //=======================================================================
 #include "pch.h"
-#include "Transition_BN.h"
+#include "Transition_DC.h"
 using namespace std;
 //=======================================================================
 
@@ -12,7 +12,7 @@ using namespace std;
 //=======================================================================
 // Specialised Constructor
 //=======================================================================
-Transition_BN::Transition_BN(string TransitionName, unsigned int NumberIn, unsigned NumberOut, unsigned NumberInhibitorArcs, unsigned int NumberCausalArcs, unsigned int NumberMarkingPermutations, vector<double> Parameters, double Transition_Firing_Delay)
+Transition_DC::Transition_DC(string TransitionName, unsigned int NumberIn, unsigned NumberOut, unsigned NumberInhibitorArcs, unsigned int NumberCausalArcs, unsigned int NumberMarkingPermutations, vector<double> Parameters, vector<vector<unsigned int>> MarkingMatrix)
 {
 	// Transition Properties
 	mTransitionName = TransitionName;
@@ -21,19 +21,18 @@ Transition_BN::Transition_BN(string TransitionName, unsigned int NumberIn, unsig
 	mNumberInhibitorArcs = NumberInhibitorArcs;
 	mNumberCausalArcs = NumberCausalArcs;
 	mNumberMarkingPermutations = mNumberMarkingPermutations;
-	mTransitionDelay = Transition_Firing_Delay;
-	mTransitionCode = 4; // Code is 1 for Deterministic Transitions
+	mTransitionCode = 4; // Code is 4 for DC transitions
 
 	// Initalising Arrays 
 	mpInputPlaces = new vector<Place*>[mNumberInputArcs];
 	mpOutputPlaces = new vector<Place*>[mNumberOutputArcs];
 	mpInhibitorPlaces = new vector<Place*>[mNumberInhibitorArcs];
+	mpCausalPlaces = new vector<Place*>[mNumberCausalArcs];
 	mpInputWeights = new vector<unsigned int>[mNumberInputArcs];
 	mpOutputWeights = new vector<unsigned int>[mNumberOutputArcs];
 	mpInhibitorWeights = new vector<unsigned int>[mNumberInhibitorArcs];
 
 
-	mpCausalPlaces = new vector<Place*>[mNumberCausalArcs];
 
 	mpCausalStateMarkings = new vector<unsigned int>[mNumberCausalArcs];
 
@@ -47,7 +46,7 @@ Transition_BN::Transition_BN(string TransitionName, unsigned int NumberIn, unsig
 //=======================================================================
 // Destructor
 //=======================================================================
-Transition_BN::~Transition_BN()
+Transition_DC::~Transition_DC()
 {
 	delete[] mpInputPlaces;
 	delete[] mpOutputPlaces;
@@ -62,7 +61,7 @@ Transition_BN::~Transition_BN()
 // Function samples a new time from the specified distribution for the 
 // transition
 //=======================================================================
-void Transition_BN::Transition_Resample()
+void Transition_DC::Transition_Resample()
 {
 
 }
@@ -71,7 +70,7 @@ void Transition_BN::Transition_Resample()
 // Function samples a new time from the specified distribution for the 
 // transition
 //=======================================================================
-void Transition_BN::Transition_Fire()
+void Transition_DC::Transition_Fire()
 {
 	// Reset Fire Test
 	mFireTest = false;
@@ -143,8 +142,20 @@ void Transition_BN::Transition_Fire()
 // Function included here, so that each unique transition type can print
 // transition properties out
 //=======================================================================
-void Transition_BN::Transition_Type_Properties()
+void Transition_DC::Transition_Type_Properties()
 {
+	cout << "Dynamic Conditional Transition" << endl;
+
+	cout << "Causal Arcs: ";
+
+	string temp;
+	for (unsigned int i = 0; i < mNumberCausalArcs; i++)
+	{
+		temp = mpCausalPlaces->at(i)->Get_Place_Name() + " ";
+		cout << temp;
+	}
+
+	cout << endl;
 
 
 }

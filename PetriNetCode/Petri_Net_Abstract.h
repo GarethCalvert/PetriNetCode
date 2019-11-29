@@ -8,6 +8,7 @@
 #include "Transition_Stochastic.h"
 #include "Transition_Deterministic.h"
 #include "Transition_Reset.h"
+#include "Transition_DC.h"
 //=======================================================================
 #include <iostream>
 #include <cstdio>

@@ -1,13 +1,13 @@
 #pragma once
 #include "Transition_Abstract.h"
-class Transition_BN : public Transition_Abstract
+class Transition_DC : public Transition_Abstract
 {
 public:
 public:
 	// Specialised Constructor
-	Transition_BN(string TransitionName, unsigned int NumberIn, unsigned int NumberOut, unsigned int NumberInhibitorArcs, unsigned int NumberCausalArcs, unsigned int NumberMarkingPermutations, vector<double> Parameters, double Transition_Firing_Delay);
+	Transition_DC(string TransitionName, unsigned int NumberIn, unsigned NumberOut, unsigned NumberInhibitorArcs, unsigned int NumberCausalArcs, unsigned int NumberMarkingPermutations, vector<double> Parameters, vector<vector<unsigned int>> MarkingMatrix);
 	// Destructor
-	~Transition_BN();
+	~Transition_DC();
 
 	// Virtual functions from Transition_Abstract that require a definition
 	void Transition_Resample();
@@ -25,7 +25,6 @@ private:
 
 	// Distribution Variables
 	unsigned int mNumberMarkingPermutations;
-	vector<Place*>* mpCausalPlaces;
 	vector<unsigned int>* mpCausalStateMarkings;
 	vector<vector<unsigned int>>* mpCausalStatePermutations;
 	vector<double>* mpConditionalProbabilityValues;
