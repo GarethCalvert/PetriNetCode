@@ -24,7 +24,7 @@ int main()
 	double InitialTime = 0.0;
 	double FinalTime = 25.0;
 	double TimeStep = 1.0/52.0;
-	int NumberSimulations = 10;
+	int NumberSimulations = 100000;
 
 	//Petri_Net_Custom
 	Petri_Net_Custom* PN_Test;
@@ -34,12 +34,15 @@ int main()
 	PN_Test->Print_Header();
 	PN_Test->Print_Token_Marking();
 	PN_Test->Print_Transition_Properties();
-	
+
+	//PN_Test->Continuous_Simulation();
+	//PN_Test->Print_Token_Marking();
+
 	// Monte Carlo Simulation
 	//PN_Test->Continuous_Simulation_MC(NumberSimulations);
 
 	// Monte Carlo Similation - Marking
-	//PN_Test->Continuous_Simulation_Marking_MC(NumberSimulations, TimeStep);
+	PN_Test->Continuous_Simulation_Marking_MC(NumberSimulations, TimeStep);
 
 	// Clearing objects from memory
 	delete PN_Test;

@@ -521,88 +521,8 @@ void Petri_Net_Abstract::Create_Transitions_Vector()
 		// If it is a DC transition
 		else if (Transition_Details[i][1] == 4)
 		{
-			// Transition Name
-			string tempName = "T" + to_string(i + 1);
-
-			// Initialise vector and matrix to store input file contents
-
-			vector<double> tempParameters;
-			tempParameters.clear();
-			//cout << Transition_Details[i][8] << endl;
-			for (int k = 0; k < Transition_Details[i][8]; k++)
-			{
-				tempParameters.push_back(0);
-			}
-
-			vector<unsigned int> tempVector;
-			tempVector.clear();
-			// Number of Causal Arcs
-			for (int k = 0; k < Transition_Details[i][6]; k++)
-			{
-				tempVector.push_back(0);
-			}
-
-			vector<vector<unsigned int>> tempMatrixMarking;
-			tempMatrixMarking.clear();
-
-			// Number of Markings
-			for (int l = 0; l < Transition_Details[i][8]; l++)
-			{
-				tempMatrixMarking.push_back(tempVector);
-			}
-
-			//=================================
-			// Read in DC Transition Input File
-			//=================================
-			// Opening the file
-			std::ifstream myfile; // Define Input Stream
-			myfile.open("InputFiles/" + mPetriNetName + "_" + tempName + ".txt"); // Open file
-			assert(myfile.is_open()); // Check file is open
-
-			string line;
-			vector<string> InputString;
-			while (getline(myfile, line))
-			{
-				InputString.push_back(line);
-			}
-
-			myfile.close(); // Close File
-
-			int Size_InputString = InputString.size();
-
-			assert(Size_InputString == Transition_Details[i][8] +1); // Assert that the size of input string vector is the number of markings plus one
-
-			int Vector_Index = 0;
-			int n, index;
-
-			// First n rows are the markings
-			for (int i = 0; i < Transition_Details[i][8]; i++)
-			{
-
-				// First Row is Input Arc Places
-				stringstream stream;
-				stream = stringstream(InputString.at(i));
-				index = 0;
-				while (stream >> n)
-				{
-					tempMatrixMarking[i][index] = n;
-					index++;
-				}
-			}
-
-			// Last row is the parameter for each marking
-			stringstream stream;
-			stream = stringstream(InputString.at(Transition_Details[i][8]));
-			index = 0;
-			while (stream >> n)
-			{
-				tempParameters[index] = n;
-				index++;
-			}
-
-
 			// Create Instance of DC Transition in the mpTransitions vector
-			mpTransitions->push_back(new Transition_DC(tempName, Transition_Details[i][2], Transition_Details[i][3], Transition_Details[i][4], Transition_Details[i][6], Transition_Details[i][8], tempParameters, tempMatrixMarking));
+			mpTransitions->push_back(new Transition_DC(("T" + to_string(i + 1)), mPetriNetName, Transition_Details[i][2], Transition_Details[i][3], Transition_Details[i][4], Transition_Details[i][6], Transition_Details[i][8], double(Transition_Details[i][12])));
 			
 		}
 		else
@@ -919,6 +839,16 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking(double TimeInterval)
 		{
 			mContinueSimulation = false;
 			Update_Marking();
+			Update_Transition_Fire_Count();
+
+			// Fill in the remaining required markings with the current one
+			for (int i = NumberMarkingsDone; i <= NumTimeIntervals; i++)
+				//for (int i = NumberMarkingsDone + 1; i < NumTimeIntervals; i++)
+			{
+				mTimeStepMarkings.push_back(*mpCurrentMarking);
+				mTimeStepTransitionFireCounts.push_back(*mpTransitionFireCount);
+				NumberMarkingsDone++;
+			}
 		}
 
 
@@ -1191,9 +1121,13 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking_MC(int NumberSimulations,
 		for (int j = 0; j < NumTimeIntervals; j++)
 		{
 			for (int k = 0; k < mNumberPlaces; k++)
-			{	//cout << "Test";
+			{	//cout << "Test" << endl;
+			//cout << j << endl;
+			//cout << k << endl;
+			//cout << mMC_TimeStepMarkings.at(j).at(k) << endl;
+			//cout << mTimeStepMarkings.at(1300).at(0) << endl;
 				mMC_TimeStepMarkings.at(j).at(k) = mMC_TimeStepMarkings.at(j).at(k) + double(mTimeStepMarkings.at(j).at(k));
-				//cout << "Test1";
+				//cout << "Test1" << endl;
 			}
 		}
 
