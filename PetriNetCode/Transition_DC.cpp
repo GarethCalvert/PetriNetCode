@@ -1,6 +1,6 @@
 //=======================================================================
 // Gareth Calvert - University of Nottingham
-// Transition_Stochastic.cpp - Stochastic Transition class, inherits 
+// Transition_DC.cpp - Dynamic Conditional Transition class, inherits 
 // functions from the Transition_Abstract class
 //=======================================================================
 #include "pch.h"
@@ -35,50 +35,23 @@ Transition_DC::Transition_DC(string TransitionName, string PetriNetName, unsigne
 	mpOutputWeights = new vector<unsigned int>[mNumberOutputArcs];
 	mpInhibitorWeights = new vector<unsigned int>[mNumberInhibitorArcs];
 
-
 	// Causal Arcs Markings and probability values
 	mpCausalStateMarkings = new vector<unsigned int>[mNumberCausalArcs];
 	mpConditionalProbabilityValues = new vector<double>[mNumberMarkingPermutations];
 	mpCausalStatePermutations = new vector<vector<unsigned int>>(mNumberMarkingPermutations, vector<unsigned int>(mNumberCausalArcs, 1));
 
 	// Initialise vector and matrix to store input file contents
-
-	//vector<double> tempParameters;
-	//tempParameters.clear();
-	//cout << Transition_Details[i][8] << endl;
 	for (int k = 0; k < mNumberMarkingPermutations; k++)
 	{
 		mpConditionalProbabilityValues->push_back(0.0);
-		//tempParameters.push_back(0);
 	}
 
 	for (int k = 0; k < mNumberCausalArcs; k++)
 	{
 		mpCausalStateMarkings->push_back(0.0);
-		//tempParameters.push_back(0);
 	}
-
-	//vector<unsigned int> tempVector;
-	//tempVector.clear();
-	// Number of Causal Arcs
-	//for (int k = 0; k < mNumberCausalArcs; k++)
-	{
-		//tempVector.push_back(0);
-	}
-
-	//vector<vector<unsigned int>> tempMatrixMarking;
-	//tempMatrixMarking.clear();
-
-	// Number of Markings
-	//for (int l = 0; l < mNumberMarkingPermutations; l++)
-	{
-		//mpCausalStatePermutations->at(l).at(1) = 1;//.push_back(tempVector);
-		//tempMatrixMarking.push_back(tempVector);
-	}
-
 	//=================================
-	// Read in DC Transition Input File
-	//=================================
+	// *** Read in DC Transition Input File
 	// Opening the file
 	std::ifstream myfile; // Define Input Stream
 	myfile.open("InputFiles/" + PetriNetName + "_" + mTransitionName + ".txt"); // Open file
@@ -112,7 +85,6 @@ Transition_DC::Transition_DC(string TransitionName, string PetriNetName, unsigne
 		while (stream >> n)
 		{
 			mpCausalStatePermutations->at(i).at(index) = n;
-			//tempMatrixMarking[i][index] = n;
 			index++;
 		}
 	}
@@ -125,7 +97,6 @@ Transition_DC::Transition_DC(string TransitionName, string PetriNetName, unsigne
 	while (stream >> m)
 	{
 		mpConditionalProbabilityValues->at(index) = m;
-		//tempParameters[index] = m;
 		index++;
 	}
 
@@ -153,10 +124,8 @@ Transition_DC::~Transition_DC()
 void Transition_DC::Transition_Resample()
 {
 	mTransitionEnabled = false;
-	mTransitionEnabled = false;
-	mCumulativeTime = 0.0; // Reset cumulative time
 	mRemainingDelay = mTransitionDelay;
-	mCumulativeTime = 0.0; // Reset cumulative time
+	mCumulativeTime = 0.0; 
 	mRemainingDelay = mTransitionDelay;
 }
 
@@ -175,32 +144,30 @@ void Transition_DC::Transition_Fire()
 		mpCausalStateMarkings->at(i) = mpCausalPlaces->at(i)->Get_Place_Marking();
 	}
 
-	bool MarkingDetermined = false;
-	int index = 0;
-	int MarkingPermutationIndex = 0;
-	double SampleProbability;
-	double RandomSample;
+	// Resetting Firing Variables
+	mMarkingDetermined = false;
+	index = 0;
+	mMarkingPermutationIndex = 0;
 
-
-	// Determining the marking of the causal places
-	while (MarkingDetermined == false && index < mNumberMarkingPermutations)
+	// Determining the marking of the causal places in terms of the permutations index
+	while (mMarkingDetermined == false && index < mNumberMarkingPermutations)
 	{
 		if (*mpCausalStateMarkings == mpCausalStatePermutations->at(index))
 		{
-			MarkingPermutationIndex = index;
-			MarkingDetermined = true;
+			mMarkingPermutationIndex = index;
+			mMarkingDetermined = true;
 		}
-
 		index++;
 	}
 
-	if (MarkingDetermined == false)
+	// If marking is not a defined permutation output message
+	if (mMarkingDetermined == false)
 	{
 		cout << "\n Marking not determined for causal places, check to see if sufficient marking permutations are being included.";
 	}
 
 	// Determine the correct probability to use given the causal markings
-	SampleProbability = mpConditionalProbabilityValues->at(MarkingPermutationIndex);
+	SampleProbability = mpConditionalProbabilityValues->at(mMarkingPermutationIndex);
 
 	// Sample a random number to determine whether the transition should fire in this time step
 	RandomSample = Get_Uniform_Distributed_Random_Number();
@@ -209,9 +176,9 @@ void Transition_DC::Transition_Fire()
 		mFireTest = true;
 	}
 	else
-	{
+	{	// If transition does not fire, delays need reset to wait for another time step
 		mTransitionEnabled = false;
-		mCumulativeTime = 0.0; // Reset cumulative time
+		mCumulativeTime = 0.0; 
 		mRemainingDelay = mTransitionDelay;
 	}
 
@@ -231,8 +198,9 @@ void Transition_DC::Transition_Fire()
 				mpOutputPlaces->at(i)->Add_Tokens(mpOutputWeights->at(i));
 			}
 
+			// Reset to default values after firing
 			mTransitionEnabled = false;
-			mCumulativeTime = 0.0; // Reset cumulative time
+			mCumulativeTime = 0.0; 
 			mRemainingDelay = mTransitionDelay;
 			mNumberTransitionFires++;
 	}
@@ -247,7 +215,6 @@ void Transition_DC::Transition_Type_Properties()
 {
 	cout << "Dynamic Conditional Transition" << endl;
 	cout << "Transition Time Step: " + to_string(mTransitionTimeStep) << endl;
-
 	cout << "Causal Arcs: ";
 
 	string temp;
@@ -258,6 +225,4 @@ void Transition_DC::Transition_Type_Properties()
 	}
 
 	cout << endl;
-
-
 }
