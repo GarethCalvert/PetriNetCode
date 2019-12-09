@@ -24,19 +24,18 @@ int main()
 	double InitialTime = 0.0;
 	double FinalTime = 25.0;
 	double TimeStep = 0.02;// 1.0 / 52.0;
-	int NumberSimulations = 100000;
+	int NumberSimulations = 30000;
 
 	//Petri_Net_Custom
 	Petri_Net_Custom* PN_Test;
-	PN_Test = new Petri_Net_Custom("DC_Insp_Metal_Det_Ind", InitialTime, FinalTime);
+	//PN_Test = new Petri_Net_Custom("DC_Insp_Metal_Det_Ind", InitialTime, FinalTime);
+	PN_Test = new Petri_Net_Custom("Variable_Paintwork_Renewal", InitialTime, FinalTime);
+
 
 	// Initial PN configuration print out
 	PN_Test->Print_Header();
 	PN_Test->Print_Token_Marking();
 	PN_Test->Print_Transition_Properties();
-
-	//PN_Test->Continuous_Simulation();
-	//PN_Test->Print_Token_Marking();
 
 	// Monte Carlo Simulation
 	//PN_Test->Continuous_Simulation_MC(NumberSimulations);

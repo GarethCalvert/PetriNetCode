@@ -132,6 +132,10 @@ void Transition_Reset::Transition_Resample()
 			mTransitionDelay = (X - 6) * (mpParameters->at(1)) + mpParameters->at(0);
 		}
 	}
+	else if (mDistributionCode == 'F')
+	{
+		mTransitionDelay = mpParameters->at(0);
+	}
 
 	// Reset of timing variables
 	mTransitionEnabled = false;
