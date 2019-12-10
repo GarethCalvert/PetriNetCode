@@ -29,7 +29,9 @@ int main()
 	//Petri_Net_Custom
 	Petri_Net_Custom* PN_Test;
 	//PN_Test = new Petri_Net_Custom("DC_Insp_Metal_Det_Ind", InitialTime, FinalTime);
-	PN_Test = new Petri_Net_Custom("Variable_Paintwork_Renewal", InitialTime, FinalTime);
+	//PN_Test = new Petri_Net_Custom("Variable_Paintwork_Renewal", InitialTime, FinalTime);
+	PN_Test = new Petri_Net_Custom("Whole_Model", InitialTime, FinalTime);
+
 
 
 	// Initial PN configuration print out
