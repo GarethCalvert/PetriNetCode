@@ -1051,7 +1051,7 @@ void Petri_Net_Abstract::Continuous_Simulation_MC(int NumberSimulations)
 // Monte Carlo Continuous Simulation, with a marking record at predefined
 // time intervals
 //=======================================================================
-void Petri_Net_Abstract::Continuous_Simulation_Marking_MC(int NumberSimulations, double TimeInterval)
+void Petri_Net_Abstract::Continuous_Simulation_Marking_MC(int NumberSimulations, double TimeInterval, string FileNameSuffix)
 {
 	//-----------------------------------------------------------
 	// Additional Setting up simulation for marking
@@ -1161,8 +1161,8 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking_MC(int NumberSimulations,
 	cout << "*** All " + to_string(NumberSimulations) + " Simulations Complete ***" << endl;
 	Print_Footer();
 
-	Save_Matrix_To_File(("OutputFiles/"+mPetriNetName+ "_MC_TimeStep_Marking_" + to_string(NumberSimulations) + ".dat"), mMC_TimeStepMarkings);
-	Save_Matrix_To_File(("OutputFiles/"+mPetriNetName + "_MC_TimeStep_Transition_Count_" + to_string(NumberSimulations) + ".dat"), mMC_TimeStepTransitionFireCounts);
+	Save_Matrix_To_File(("OutputFiles/"+mPetriNetName+ "_MC_TimeStep_Marking_" + to_string(NumberSimulations) + FileNameSuffix + ".dat"), mMC_TimeStepMarkings);
+	Save_Matrix_To_File(("OutputFiles/"+mPetriNetName + "_MC_TimeStep_Transition_Count_" + to_string(NumberSimulations) + FileNameSuffix + ".dat"), mMC_TimeStepTransitionFireCounts);
 
 
 }

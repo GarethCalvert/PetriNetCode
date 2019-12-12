@@ -39,6 +39,8 @@ class Transition_Abstract
 		bool Get_Enabled_Status();
 		double Get_Uniform_Distributed_Random_Number();
 
+		void Change_Fixed_Transition_Delay(double NewTransitionDelay);
+
 		// Accessor Functions
 		string Get_Transition_Name();
 		unsigned int Get_Transition_Code();

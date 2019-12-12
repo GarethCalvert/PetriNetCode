@@ -59,7 +59,7 @@ public:
 	void Continuous_Simulation();
 	void Continuous_Simulation_Marking(double TimeInterval);
 	void Continuous_Simulation_MC(int NumberSimulations);
-	void Continuous_Simulation_Marking_MC(int NumberSimulations, double TimeInterval);
+	void Continuous_Simulation_Marking_MC(int NumberSimulations, double TimeInterval, string FileNameSuffix);
 	void Test_Simulation();
 	void Reset_PN();
 	void Change_Initial_Marking(vector<unsigned int> NewInitialMarking);
@@ -76,6 +76,13 @@ public:
 	void Save_Double_Vector_To_File(const std::string FileName, vector<double> Vector_To_Write);
 	void Save_Matrix_To_File(const std::string FileName, vector<vector<double>> Matrix_To_Write);
 	vector<vector<double>> Convert_Matrix(vector<vector<unsigned int>> Matrix_To_Convert);
+
+	//====================================
+	// Vectors of Transitions
+	// Placed here so that you can access it directly from the main function
+	// Should probably change it to protected/private using accessor functions in the future
+	//====================================
+	vector<Transition_Abstract*>* mpTransitions;
 
 protected:
 
@@ -94,10 +101,9 @@ protected:
 	double mCurrentGlobalTime = 0.0;
 
 	//====================================
-	// Vectors of the Places & Transitions
+	// Vectors of the Places
 	//====================================
 	vector<Place*>* mpPlaces;
-	vector<Transition_Abstract*>* mpTransitions;
 
 	//====================================
 	// Vector for list of current enabled transitions

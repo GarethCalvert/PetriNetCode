@@ -348,3 +348,15 @@ void Transition_Abstract::Print_Transition_Properties()
 	}
 	cout << endl;
 }
+
+//=======================================================================
+// Can be used to change the transition delay time
+//=======================================================================
+void Transition_Abstract::Change_Fixed_Transition_Delay(double NewTransitionDelay)
+{
+	mTransitionDelay = NewTransitionDelay;
+	mTransitionEnabled = false;
+	mTransitionInhibited = false;
+	mCumulativeTime = 0.0;
+	mRemainingDelay = mTransitionDelay;
+}
