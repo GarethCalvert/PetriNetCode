@@ -25,6 +25,7 @@ Transition_Stochastic::Transition_Stochastic(string TransitionName, unsigned int
 	mNumberParameters = NumberParameters;
 	mpParameters = new vector<double>[mNumberParameters];
 	*mpParameters = Parameters;
+	
 
 	// Initalising Arrays 
 	mpInputPlaces = new vector<Place*>[mNumberInputArcs];
@@ -80,10 +81,10 @@ void Transition_Stochastic::Transition_Resample()
 		// mpParameters->at(1) is the SD
 		for (int i = 0; i < 12; i++)
 		{
-			X = +Get_Uniform_Distributed_Random_Number();
+			X += Get_Uniform_Distributed_Random_Number();
 		}
 
-		mTransitionDelay = (X-6)*(mpParameters->at(1)) + mpParameters->at(0);
+		mTransitionDelay = ((X-6)*(mpParameters->at(1))) + mpParameters->at(0);
 
 		while (mTransitionDelay < 0)
 		{
@@ -92,10 +93,11 @@ void Transition_Stochastic::Transition_Resample()
 			// mpParameters->at(1) is the SD
 			for (int i = 0; i < 12; i++)
 			{
-				X = +Get_Uniform_Distributed_Random_Number();
+				X += Get_Uniform_Distributed_Random_Number();
 			}
 
-			mTransitionDelay = (X - 6) * (mpParameters->at(1)) + mpParameters->at(0);
+			mTransitionDelay = ((X - 6)*(mpParameters->at(1))) + mpParameters->at(0);
+
 		}
 	}
 

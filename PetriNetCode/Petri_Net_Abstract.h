@@ -78,12 +78,10 @@ public:
 	vector<vector<double>> Convert_Matrix(vector<vector<unsigned int>> Matrix_To_Convert);
 
 	//====================================
-	// Vectors of Transitions
-	// Placed here so that you can access it directly from the main function
-	// Should probably change it to protected/private using accessor functions in the future
+	// Accessor / Functions to alter Place/Transitions
 	//====================================
-	vector<Transition_Abstract*>* mpTransitions;
-
+	void Change_Place_Initial_Marking(unsigned int PlaceIndex, unsigned int NewMarking);
+	
 protected:
 
 	//====================================
@@ -101,9 +99,10 @@ protected:
 	double mCurrentGlobalTime = 0.0;
 
 	//====================================
-	// Vectors of the Places
+	// Vectors of the Places and Transitions
 	//====================================
 	vector<Place*>* mpPlaces;
+	vector<Transition_Abstract*>* mpTransitions;
 
 	//====================================
 	// Vector for list of current enabled transitions

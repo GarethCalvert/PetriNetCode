@@ -420,6 +420,8 @@ void Petri_Net_Abstract::Create_Transitions_Vector()
 				tempNumPar = 2;
 				tempParameters->push_back(Transition_Details[i][9]);
 				tempParameters->push_back(Transition_Details[i][10]);
+
+				
 			}
 
 			else if (Transition_Details[i][8] == 3)
@@ -724,7 +726,7 @@ void Petri_Net_Abstract::Continuous_Simulation()
 					}
 					else
 					{
-						cout << "FALSE" << endl;
+						//cout << "FALSE" << endl;
 					}
 				}
 			}
@@ -797,6 +799,7 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking(double TimeInterval)
 	// While loop to break out of
 	while (mContinueSimulation == true)
 	{
+		
 		// Clear vector of enabled transitions for next iteration
 		mEnabledTransitions.clear();
 		NumEnabled = 0;
@@ -959,7 +962,7 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking(double TimeInterval)
 					}
 					else
 					{
-						cout << "FALSE" << endl;
+						//cout << "FALSE" << endl;
 					}
 				}
 			}
@@ -1106,6 +1109,7 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking_MC(int NumberSimulations,
 
 	for (int i = 0; i < NumberSimulations; i++)
 	{
+
 		Reset_PN();
 		Continuous_Simulation_Marking(TimeInterval);
 
@@ -1296,4 +1300,13 @@ vector<vector<double>> Petri_Net_Abstract::Convert_Matrix(vector<vector<unsigned
 	}
 
 	return Converted_Matrix;
+}
+
+
+//========================================================
+// Function to access place and change marking
+//========================================================
+void Petri_Net_Abstract::Change_Place_Initial_Marking(unsigned int PlaceIndex, unsigned int NewMarking)
+{
+	mpPlaces->at(PlaceIndex)->Change_Initial_Marking(NewMarking);
 }
