@@ -22,7 +22,7 @@ int main()
 {
 	// Simulation Parameters
 	double InitialTime = 0.0;
-	double FinalTime = 25.0;
+	double FinalTime = 50.0;
 	double TimeStep = 0.02;// 1.0 / 52.0;
 	int NumberSimulations = 100000;
 	string Model_File_Name = "Whole_Model";
