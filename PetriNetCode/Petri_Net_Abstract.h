@@ -81,6 +81,7 @@ public:
 	// Accessor / Functions to alter Place/Transitions
 	//====================================
 	void Change_Place_Initial_Marking(unsigned int PlaceIndex, unsigned int NewMarking);
+	void Change_Transition_Firing_Delay_Time(unsigned int TransitionIndex, double NewDelayTime);
 	
 protected:
 

@@ -1161,6 +1161,7 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking_MC(int NumberSimulations,
 		}
 	}
 
+
 	// End of MC simulations print out to console
 	cout << "*** All " + to_string(NumberSimulations) + " Simulations Complete ***" << endl;
 	Print_Footer();
@@ -1309,4 +1310,13 @@ vector<vector<double>> Petri_Net_Abstract::Convert_Matrix(vector<vector<unsigned
 void Petri_Net_Abstract::Change_Place_Initial_Marking(unsigned int PlaceIndex, unsigned int NewMarking)
 {
 	mpPlaces->at(PlaceIndex)->Change_Initial_Marking(NewMarking);
+}
+
+//========================================================
+// Function to access transition and change firing delay
+//========================================================
+void Petri_Net_Abstract::Change_Transition_Firing_Delay_Time(unsigned int TransitionIndex, double NewDelayTime)
+{
+	mpTransitions->at(TransitionIndex)->Change_Fixed_Transition_Delay(NewDelayTime);
+	
 }

@@ -24,8 +24,8 @@ int main()
 	double InitialTime = 0.0;
 	double FinalTime = 50.0;
 	double TimeStep = 0.02;// 1.0 / 52.0;
-	int NumberSimulations = 100000;
-	string Model_File_Name = "Whole_Model";
+	int NumberSimulations = 100000; // 60000;
+	string Model_File_Name = "ESREL_PT"; //"Whole_Model";
 	
 	//Petri_Net_Custom
 	
@@ -47,16 +47,14 @@ int main()
 	cout << "Simulating Strategy 0 - Do Nothing" << endl;
 
 	// Setting up initial token to enable disable particular intervention types
-	PN_Model->Change_Place_Initial_Marking(32, 1); // Repair [P] when [P2,P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(33, 1); // Repair [P] when [P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(34, 1); // Repair [P] when [P4] revealed
-	PN_Model->Change_Place_Initial_Marking(35, 1); // Repair [C] when [C3,C4] revealed
-	PN_Model->Change_Place_Initial_Marking(36, 1); // Repair [P,C] when [C4] revealed
-	PN_Model->Change_Place_Initial_Marking(37, 1); // Repair [P,C,B] when [B2] revealed
+	PN_Model->Change_Place_Initial_Marking(22, 1); // Repair [P] when [P2,P3,P4] revealed
+	PN_Model->Change_Place_Initial_Marking(23, 1); // Repair [P] when [P3,P4] revealed
+	PN_Model->Change_Place_Initial_Marking(24, 1); // Repair [P] when [P4] revealed
+	PN_Model->Change_Place_Initial_Marking(25, 1); // Repair [C] when [C3,C4] revealed
+	PN_Model->Change_Place_Initial_Marking(26, 1); // Repair [P,C] when [C4] revealed
+	PN_Model->Change_Place_Initial_Marking(27, 1); // Repair [P,C,B] when [B2] revealed
 
-	PN_Model->Change_Place_Initial_Marking(48, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(49, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(50, 0); // Part of fixed paintwork renewal loop
+	PN_Model->Change_Place_Initial_Marking(39, 0); // Part of fixed paintwork renewal loop
 
 
 	// Monte Carlo Similation - Marking
@@ -69,44 +67,40 @@ int main()
 	cout << "Simulating Strategy 1" << endl;
 
 	// Setting up initial token to enable disable particular intervention types
-	PN_Model->Change_Place_Initial_Marking(32, 1); // Repair [P] when [P2,P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(33, 1); // Repair [P] when [P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(34, 1); // Repair [P] when [P4] revealed
-	PN_Model->Change_Place_Initial_Marking(35, 1); // Repair [C] when [C3,C4] revealed
-	PN_Model->Change_Place_Initial_Marking(36, 0); // Repair [P,C] when [C4] revealed
-	PN_Model->Change_Place_Initial_Marking(37, 0); // Repair [P,C,B] when [B2] revealed
+	PN_Model->Change_Place_Initial_Marking(22, 1); // Repair [P] when [P2,P3,P4] revealed
+	PN_Model->Change_Place_Initial_Marking(23, 1); // Repair [P] when [P3,P4] revealed
+	PN_Model->Change_Place_Initial_Marking(24, 1); // Repair [P] when [P4] revealed
+	PN_Model->Change_Place_Initial_Marking(25, 1); // Repair [C] when [C3,C4] revealed
+	PN_Model->Change_Place_Initial_Marking(26, 0); // Repair [P,C] when [C4] revealed
+	PN_Model->Change_Place_Initial_Marking(27, 0); // Repair [P,C,B] when [B2] revealed
 
 
-	PN_Model->Change_Place_Initial_Marking(48, 1); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(49, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(50, 0); // Part of fixed paintwork renewal loop
+	PN_Model->Change_Place_Initial_Marking(39, 1); // Part of fixed paintwork renewal loop
+	PN_Model->Change_Transition_Firing_Delay_Time(36, 5); // Fixed Loop Firing Time
 
 	// Monte Carlo Similation - Marking
 	PN_Model->Continuous_Simulation_Marking_MC(NumberSimulations, TimeStep, "_Strategy_1");
 
 	//====================================
-	// Strategy 2
+	// Strategy 2 
 	//====================================
 
 	cout << "Simulating Strategy 2" << endl;
 
 	// Setting up initial token to enable disable particular intervention types
-	PN_Model->Change_Place_Initial_Marking(32, 0); // Repair [P] when [P2,P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(33, 0); // Repair [P] when [P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(34, 0); // Repair [P] when [P4] revealed
-	PN_Model->Change_Place_Initial_Marking(35, 0); // Repair [C] when [C3,C4] revealed
-	PN_Model->Change_Place_Initial_Marking(36, 0); // Repair [P,C] when [C4] revealed
-	PN_Model->Change_Place_Initial_Marking(37, 0); // Repair [P,C,B] when [B2] revealed
+	PN_Model->Change_Place_Initial_Marking(22, 1); // Repair [P] when [P2,P3,P4] revealed
+	PN_Model->Change_Place_Initial_Marking(23, 1); // Repair [P] when [P3,P4] revealed
+	PN_Model->Change_Place_Initial_Marking(24, 1); // Repair [P] when [P4] revealed
+	PN_Model->Change_Place_Initial_Marking(25, 1); // Repair [C] when [C3,C4] revealed
+	PN_Model->Change_Place_Initial_Marking(26, 0); // Repair [P,C] when [C4] revealed
+	PN_Model->Change_Place_Initial_Marking(27, 0); // Repair [P,C,B] when [B2] revealed
 
 
-	PN_Model->Change_Place_Initial_Marking(48, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(49, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(50, 0); // Part of fixed paintwork renewal loop
+	PN_Model->Change_Place_Initial_Marking(39, 1); // Part of fixed paintwork renewal loop
+	PN_Model->Change_Transition_Firing_Delay_Time(36, 10); // Fixed Loop Firing Time
 
 	// Monte Carlo Similation - Marking
 	PN_Model->Continuous_Simulation_Marking_MC(NumberSimulations, TimeStep, "_Strategy_2");
-
-
 
 	//====================================
 	// Strategy 3
@@ -115,20 +109,19 @@ int main()
 	cout << "Simulating Strategy 3" << endl;
 
 	// Setting up initial token to enable disable particular intervention types
-	PN_Model->Change_Place_Initial_Marking(32, 1); // Repair [P] when [P2,P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(33, 0); // Repair [P] when [P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(34, 0); // Repair [P] when [P4] revealed
-	PN_Model->Change_Place_Initial_Marking(35, 0); // Repair [C] when [C3,C4] revealed
-	PN_Model->Change_Place_Initial_Marking(36, 0); // Repair [P,C] when [C4] revealed
-	PN_Model->Change_Place_Initial_Marking(37, 0); // Repair [P,C,B] when [B2] revealed
+	PN_Model->Change_Place_Initial_Marking(22, 0); // Repair [P] when [P2,P3,P4] revealed
+	PN_Model->Change_Place_Initial_Marking(23, 0); // Repair [P] when [P3,P4] revealed
+	PN_Model->Change_Place_Initial_Marking(24, 0); // Repair [P] when [P4] revealed
+	PN_Model->Change_Place_Initial_Marking(25, 1); // Repair [C] when [C3,C4] revealed
+	PN_Model->Change_Place_Initial_Marking(26, 0); // Repair [P,C] when [C4] revealed
+	PN_Model->Change_Place_Initial_Marking(27, 0); // Repair [P,C,B] when [B2] revealed
 
 
-	PN_Model->Change_Place_Initial_Marking(48, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(49, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(50, 0); // Part of fixed paintwork renewal loop
+	PN_Model->Change_Place_Initial_Marking(39, 0); // Part of fixed paintwork renewal loop
 
 	// Monte Carlo Similation - Marking
 	PN_Model->Continuous_Simulation_Marking_MC(NumberSimulations, TimeStep, "_Strategy_3");
+
 
 
 	//====================================
@@ -138,21 +131,19 @@ int main()
 	cout << "Simulating Strategy 4" << endl;
 
 	// Setting up initial token to enable disable particular intervention types
-	PN_Model->Change_Place_Initial_Marking(32, 1); // Repair [P] when [P2,P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(33, 1); // Repair [P] when [P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(34, 0); // Repair [P] when [P4] revealed
-	PN_Model->Change_Place_Initial_Marking(35, 0); // Repair [C] when [C3,C4] revealed
-	PN_Model->Change_Place_Initial_Marking(36, 0); // Repair [P,C] when [C4] revealed
-	PN_Model->Change_Place_Initial_Marking(37, 0); // Repair [P,C,B] when [B2] revealed
+	PN_Model->Change_Place_Initial_Marking(22, 1); // Repair [P] when [P2,P3,P4] revealed
+	PN_Model->Change_Place_Initial_Marking(23, 0); // Repair [P] when [P3,P4] revealed
+	PN_Model->Change_Place_Initial_Marking(24, 0); // Repair [P] when [P4] revealed
+	PN_Model->Change_Place_Initial_Marking(25, 1); // Repair [C] when [C3,C4] revealed
+	PN_Model->Change_Place_Initial_Marking(26, 0); // Repair [P,C] when [C4] revealed
+	PN_Model->Change_Place_Initial_Marking(27, 0); // Repair [P,C,B] when [B2] revealed
 
 
-	PN_Model->Change_Place_Initial_Marking(48, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(49, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(50, 0); // Part of fixed paintwork renewal loop
-
+	PN_Model->Change_Place_Initial_Marking(39, 0); // Part of fixed paintwork renewal loop
 
 	// Monte Carlo Similation - Marking
 	PN_Model->Continuous_Simulation_Marking_MC(NumberSimulations, TimeStep, "_Strategy_4");
+
 
 	//====================================
 	// Strategy 5
@@ -161,17 +152,15 @@ int main()
 	cout << "Simulating Strategy 5" << endl;
 
 	// Setting up initial token to enable disable particular intervention types
-	PN_Model->Change_Place_Initial_Marking(32, 1); // Repair [P] when [P2,P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(33, 1); // Repair [P] when [P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(34, 1); // Repair [P] when [P4] revealed
-	PN_Model->Change_Place_Initial_Marking(35, 0); // Repair [C] when [C3,C4] revealed
-	PN_Model->Change_Place_Initial_Marking(36, 0); // Repair [P,C] when [C4] revealed
-	PN_Model->Change_Place_Initial_Marking(37, 0); // Repair [P,C,B] when [B2] revealed
+	PN_Model->Change_Place_Initial_Marking(22, 1); // Repair [P] when [P2,P3,P4] revealed
+	PN_Model->Change_Place_Initial_Marking(23, 1); // Repair [P] when [P3,P4] revealed
+	PN_Model->Change_Place_Initial_Marking(24, 0); // Repair [P] when [P4] revealed
+	PN_Model->Change_Place_Initial_Marking(25, 1); // Repair [C] when [C3,C4] revealed
+	PN_Model->Change_Place_Initial_Marking(26, 0); // Repair [P,C] when [C4] revealed
+	PN_Model->Change_Place_Initial_Marking(27, 0); // Repair [P,C,B] when [B2] revealed
 
 
-	PN_Model->Change_Place_Initial_Marking(48, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(49, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(50, 0); // Part of fixed paintwork renewal loop
+	PN_Model->Change_Place_Initial_Marking(39, 0); // Part of fixed paintwork renewal loop
 
 
 	// Monte Carlo Similation - Marking
@@ -184,71 +173,20 @@ int main()
 	cout << "Simulating Strategy 6" << endl;
 
 	// Setting up initial token to enable disable particular intervention types
-	PN_Model->Change_Place_Initial_Marking(32, 0); // Repair [P] when [P2,P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(33, 0); // Repair [P] when [P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(34, 0); // Repair [P] when [P4] revealed
-	PN_Model->Change_Place_Initial_Marking(35, 1); // Repair [C] when [C3,C4] revealed
-	PN_Model->Change_Place_Initial_Marking(36, 0); // Repair [P,C] when [C4] revealed
-	PN_Model->Change_Place_Initial_Marking(37, 0); // Repair [P,C,B] when [B2] revealed
+	PN_Model->Change_Place_Initial_Marking(22, 1); // Repair [P] when [P2,P3,P4] revealed
+	PN_Model->Change_Place_Initial_Marking(23, 1); // Repair [P] when [P3,P4] revealed
+	PN_Model->Change_Place_Initial_Marking(24, 1); // Repair [P] when [P4] revealed
+	PN_Model->Change_Place_Initial_Marking(25, 1); // Repair [C] when [C3,C4] revealed
+	PN_Model->Change_Place_Initial_Marking(26, 0); // Repair [P,C] when [C4] revealed
+	PN_Model->Change_Place_Initial_Marking(27, 0); // Repair [P,C,B] when [B2] revealed
 
 
-	PN_Model->Change_Place_Initial_Marking(48, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(49, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(50, 0); // Part of fixed paintwork renewal loop
+	PN_Model->Change_Place_Initial_Marking(39, 0); // Part of fixed paintwork renewal loop
 
 
 	// Monte Carlo Similation - Marking
 	PN_Model->Continuous_Simulation_Marking_MC(NumberSimulations, TimeStep, "_Strategy_6");
 
-	//====================================
-	// Strategy 7
-	//====================================
-
-	cout << "Simulating Strategy 7" << endl;
-
-	// Setting up initial token to enable disable particular intervention types
-	PN_Model->Change_Place_Initial_Marking(32, 1); // Repair [P] when [P2,P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(33, 0); // Repair [P] when [P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(34, 0); // Repair [P] when [P4] revealed
-	PN_Model->Change_Place_Initial_Marking(35, 1); // Repair [C] when [C3,C4] revealed
-	PN_Model->Change_Place_Initial_Marking(36, 0); // Repair [P,C] when [C4] revealed
-	PN_Model->Change_Place_Initial_Marking(37, 0); // Repair [P,C,B] when [B2] revealed
-
-
-	PN_Model->Change_Place_Initial_Marking(48, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(49, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(50, 0); // Part of fixed paintwork renewal loop
-
-
-	// Monte Carlo Similation - Marking
-	PN_Model->Continuous_Simulation_Marking_MC(NumberSimulations, TimeStep, "_Strategy_7");
-
-	//====================================
-	// Strategy 8
-	//====================================
-
-	cout << "Simulating Strategy 8" << endl;
-
-	
-	// Setting up initial token to enable disable particular intervention types
-	PN_Model->Change_Place_Initial_Marking(32, 1); // Repair [P] when [P2,P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(33, 1); // Repair [P] when [P3,P4] revealed
-	PN_Model->Change_Place_Initial_Marking(34, 0); // Repair [P] when [P4] revealed
-	PN_Model->Change_Place_Initial_Marking(35, 1); // Repair [C] when [C3,C4] revealed
-	PN_Model->Change_Place_Initial_Marking(36, 0); // Repair [P,C] when [C4] revealed
-	PN_Model->Change_Place_Initial_Marking(37, 0); // Repair [P,C,B] when [B2] revealed
-
-
-	PN_Model->Change_Place_Initial_Marking(48, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(49, 0); // Part of fixed paintwork renewal loop
-	PN_Model->Change_Place_Initial_Marking(50, 0); // Part of fixed paintwork renewal loop
-
-	// Monte Carlo Similation - Marking
-	PN_Model->Continuous_Simulation_Marking_MC(NumberSimulations, TimeStep, "_Strategy_8");
-
-
-	// Clearing objects from memory
-	delete PN_Model;
 
 	//================================================
 	// Code requiring user input to end program
