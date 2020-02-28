@@ -1173,6 +1173,134 @@ void Petri_Net_Abstract::Continuous_Simulation_Marking_MC(int NumberSimulations,
 }
 
 //=======================================================================
+// Monte Carlo Continuous Simulation, with a marking record at predefined
+// time intervals
+//=======================================================================
+void Petri_Net_Abstract::Continuous_Simulation_Marking_MC_Convergence(int NumberSimulations, double TimeInterval, int ConvergencePlaceIndex, string FileNameSuffix)
+{
+	//-----------------------------------------------------------
+	// Additional Setting up simulation for marking
+	// Calculating the number Time Intervals
+	double NumTimeIntervals;
+	NumTimeIntervals = ((mFinalTime - mInitialTime) / TimeInterval) + 1;
+
+	// Only works in Debug mode
+	assert(ceil(NumTimeIntervals) == floor(NumTimeIntervals));
+
+	// Print out to cons
+	if (ceil(NumTimeIntervals) != floor(NumTimeIntervals))
+	{
+		cout << "Inteval Size results in a non-integer number of time intervals";
+	}
+
+	// Ensure it is has an integer value
+	NumTimeIntervals = ceil(NumTimeIntervals);
+
+
+	//------------------------------------------------------------
+	vector<unsigned int> ConvergencePlaceMarking;
+	ConvergencePlaceMarking.clear();
+
+	vector<double> tempVector;
+	tempVector.clear();
+	for (int i = 0; i < mNumberPlaces; i++)
+	{
+		tempVector.push_back(0.0);
+	}
+
+	mMC_TimeStepMarkings.clear();
+
+	for (int j = 0; j < NumTimeIntervals; j++)
+	{
+		mMC_TimeStepMarkings.push_back(tempVector);
+	}
+
+	tempVector.clear();
+	for (int i = 0; i < mNumberTransitions; i++)
+	{
+		tempVector.push_back(0.0);
+	}
+
+	mMC_TimeStepTransitionFireCounts.clear();
+
+	for (int j = 0; j < NumTimeIntervals; j++)
+	{
+		mMC_TimeStepTransitionFireCounts.push_back(tempVector);
+	}
+	//------------------------------------------------------------
+
+	double SimNum;
+
+	for (int i = 0; i < NumberSimulations; i++)
+	{
+
+		Reset_PN();
+		Continuous_Simulation_Marking(TimeInterval);
+
+		// Used to print out MC progress to console
+		SimNum = double(i);
+		if (i % 500 == 0)
+		{
+			cout << "Simulations Completed: " + to_string(i) << endl;
+		}
+
+		// Recording marking at convergence place at end of simulation
+		ConvergencePlaceMarking.push_back(mpCurrentMarking->at(ConvergencePlaceIndex));
+
+
+		for (int j = 0; j < NumTimeIntervals; j++)
+		{
+			for (int k = 0; k < mNumberPlaces; k++)
+			{	//cout << "Test" << endl;
+			//cout << j << endl;
+			//cout << k << endl;
+			//cout << mMC_TimeStepMarkings.at(j).at(k) << endl;
+			//cout << mTimeStepMarkings.at(1300).at(0) << endl;
+				mMC_TimeStepMarkings.at(j).at(k) = mMC_TimeStepMarkings.at(j).at(k) + double(mTimeStepMarkings.at(j).at(k));
+				//cout << "Test1" << endl;
+			}
+		}
+
+		for (int j = 0; j < NumTimeIntervals; j++)
+		{
+			for (int k = 0; k < mNumberTransitions; k++)
+			{
+				mMC_TimeStepTransitionFireCounts.at(j).at(k) = mMC_TimeStepTransitionFireCounts.at(j).at(k) + double(mTimeStepTransitionFireCounts.at(j).at(k));
+			}
+		}
+
+	}
+
+	for (int j = 0; j < NumTimeIntervals; j++)
+	{
+		for (int k = 0; k < mNumberPlaces; k++)
+		{
+			mMC_TimeStepMarkings.at(j).at(k) = mMC_TimeStepMarkings.at(j).at(k) / NumberSimulations;
+		}
+	}
+
+	for (int j = 0; j < NumTimeIntervals; j++)
+	{
+		for (int k = 0; k < mNumberTransitions; k++)
+		{
+			mMC_TimeStepTransitionFireCounts.at(j).at(k) = mMC_TimeStepTransitionFireCounts.at(j).at(k) / NumberSimulations;
+		}
+	}
+
+
+	// End of MC simulations print out to console
+	cout << "*** All " + to_string(NumberSimulations) + " Simulations Complete ***" << endl;
+	Print_Footer();
+
+	// Saving marking and transition counts to file
+	Save_Matrix_To_File(("OutputFiles/" + mPetriNetName + "_MC_TimeStep_Marking_" + to_string(NumberSimulations) + FileNameSuffix + ".dat"), mMC_TimeStepMarkings);
+	Save_Matrix_To_File(("OutputFiles/" + mPetriNetName + "_MC_TimeStep_Transition_Count_" + to_string(NumberSimulations) + FileNameSuffix + ".dat"), mMC_TimeStepTransitionFireCounts);
+
+	// Saving Convergence Place Marking Vector to file
+	Save_Int_Vector_To_File(("OutputFiles/" + mPetriNetName + "_ConvergenceMarking_" + to_string(NumberSimulations) + FileNameSuffix + ".dat"), ConvergencePlaceMarking);
+}
+
+//=======================================================================
 // Function to evaluate fragments of code, for the purposes of debugging
 //=======================================================================
 void Petri_Net_Abstract::Test_Simulation()
@@ -1225,6 +1353,33 @@ void Petri_Net_Abstract::Change_Initial_Marking(vector<unsigned int> NewInitialM
 //========================================================
 
 void Petri_Net_Abstract::Save_Double_Vector_To_File(const std::string FileName, vector<double> Vector_To_Write)
+{
+	// Setting strem file precision
+	std::ofstream output_file;
+	output_file.setf(std::ios::scientific, std::ios::floatfield);
+	output_file.precision(6);
+
+	// Opening file
+	std::string file_name = FileName;
+	output_file.open(file_name);
+	assert(output_file.is_open());
+
+	// Write data
+	for (int i = 0; i < Vector_To_Write.size(); i++)
+	{
+		output_file << std::setw(15) << Vector_To_Write.at(i);
+		output_file << std::endl;
+	}
+
+	// Close file
+	output_file.close();
+}
+
+//========================================================
+// Save Vector to File
+//========================================================
+
+void Petri_Net_Abstract::Save_Int_Vector_To_File(const std::string FileName, vector<unsigned int> Vector_To_Write)
 {
 	// Setting strem file precision
 	std::ofstream output_file;

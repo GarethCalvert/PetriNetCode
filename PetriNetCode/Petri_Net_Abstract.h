@@ -60,6 +60,7 @@ public:
 	void Continuous_Simulation_Marking(double TimeInterval);
 	void Continuous_Simulation_MC(int NumberSimulations);
 	void Continuous_Simulation_Marking_MC(int NumberSimulations, double TimeInterval, string FileNameSuffix);
+	void Continuous_Simulation_Marking_MC_Convergence(int NumberSimulations, double TimeInterval, int ConvergencePlaceIndex, string FileNameSuffix);
 	void Test_Simulation();
 	void Reset_PN();
 	void Change_Initial_Marking(vector<unsigned int> NewInitialMarking);
@@ -73,6 +74,7 @@ public:
 	//====================================
 	// Other I/O Functions
 	//====================================
+	void Save_Int_Vector_To_File(const std::string FileName, vector<unsigned int> Vector_To_Write);
 	void Save_Double_Vector_To_File(const std::string FileName, vector<double> Vector_To_Write);
 	void Save_Matrix_To_File(const std::string FileName, vector<vector<double>> Matrix_To_Write);
 	vector<vector<double>> Convert_Matrix(vector<vector<unsigned int>> Matrix_To_Convert);
