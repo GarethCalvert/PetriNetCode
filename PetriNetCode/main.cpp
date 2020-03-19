@@ -124,7 +124,7 @@ int main()
 
 
 	// Monte Carlo Similation - Marking
-	PN_Model->Continuous_Simulation_Marking_MC(NumberSimulations, TimeStep, "_Strategy_3");
+	PN_Model->Continuous_Simulation_Marking_MC_Convergence(NumberSimulations, TimeStep, ConvergencePlaceIndex, "_Strategy_3");
 
 	//====================================
 	// Strategy 4
@@ -145,7 +145,7 @@ int main()
 
 
 	// Monte Carlo Similation - Marking
-	PN_Model->Continuous_Simulation_Marking_MC(NumberSimulations, TimeStep, "_Strategy_4");
+	PN_Model->Continuous_Simulation_Marking_MC_Convergence(NumberSimulations, TimeStep, ConvergencePlaceIndex, "_Strategy_4");
 
 
 	// DBN - PN Convergence
