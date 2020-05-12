@@ -96,7 +96,8 @@ Transition_DC::Transition_DC(string TransitionName, string PetriNetName, unsigne
 	double m;
 	while (stream >> m)
 	{
-		mpConditionalProbabilityValues->at(index) = m;
+		//mpConditionalProbabilityValues->at(index) = m;
+		mpConditionalProbabilityValues->at(index) = exp(-m* mTransitionTimeStep);
 		index++;
 	}
 
