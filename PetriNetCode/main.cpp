@@ -20,14 +20,13 @@ using namespace std;
 
 int main()
 {
-
 	// Simulation Parameters
 	double InitialTime = 0.0;
-	double FinalTime = 50.0;
+	double FinalTime = 35.0;
 	double TimeStep = 0.02;// 1.0 / 52.0;
 	int NumberSimulations = 100000;
 	int ConvergencePlaceIndex = 46; // P47 - 1 as index is zero based
-	string Model_File_Name = "Frontiers"; //"Whole_Model";
+	string Model_File_Name = "RESS_MGE"; // "Frontiers"; //"Whole_Model";
 
 	//Petri_Net_Custom
 
@@ -146,15 +145,16 @@ int main()
 
 	// Monte Carlo Similation - Marking
 	PN_Model->Continuous_Simulation_Marking_MC_Convergence(NumberSimulations, TimeStep, ConvergencePlaceIndex, "_Strategy_4");
-
-
-	// DBN - PN Convergence
+	
+	//---------------------------------------------------------------------------------------------------------------------------------------
 	/*
+	// DBN - PN Convergence
+	
 	// Simulation Parameters
 	double InitialTime = 0.0;
 	double FinalTime = 25.0;
 	double TimeStep = 0.02;// 1.0 / 52.0;
-	int NumberSimulations = 600000;
+	int NumberSimulations = 500000;
 	string Model_File_Name = "DBN_Test"; //"Whole_Model";
 	
 	//Petri_Net_Custom
@@ -168,8 +168,9 @@ int main()
 	PN_Model->Print_Transition_Properties();
 
 	// Monte Carlo Simulation
-	PN_Model->Continuous_Simulation_Marking_MC(NumberSimulations,0.02,"_MGE-DK");
+	PN_Model->Continuous_Simulation_Marking_MC(NumberSimulations,0.02,"_MGE-DK-BU-2019");
 	*/
+	
 	
 	//================================================
 	// Code requiring user input to end program
