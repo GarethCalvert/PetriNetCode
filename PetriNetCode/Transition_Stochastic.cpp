@@ -143,3 +143,15 @@ void Transition_Stochastic::Transition_Type_Properties()
 	}
 
 }
+
+//=======================================================================
+// Redefining Change_Transition_Parameters from Virtual function in the 
+// abstract class
+//=======================================================================
+void Transition_Stochastic::Change_Transition_Parameters(vector<double> NewParameters)
+{
+	Set_Distribution_Parameters(mDistributionCode, mNumberParameters, NewParameters);
+
+	Transition_Resample();
+
+}

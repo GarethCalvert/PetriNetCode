@@ -227,3 +227,15 @@ void Transition_DC::Transition_Type_Properties()
 
 	cout << endl;
 }
+
+//=======================================================================
+// Redefining 
+//=======================================================================
+void Transition_DC::Change_Transition_Parameters(vector<double> NewParameters)
+{
+	for (int i = 0; i < mpConditionalProbabilityValues->size(); i++)
+	{
+		mpConditionalProbabilityValues->at(i) = exp(-NewParameters.at(i) * mTransitionTimeStep);
+	}
+
+}

@@ -124,6 +124,17 @@ void Transition_Abstract::Reset_Transition_To_Initial()
 }
 
 //=======================================================================
+// Vitural Function - Reset_Transition_To_Initial() - Default definition unless 
+// overridden
+//=======================================================================
+void Transition_Abstract::Change_Transition_Parameters(vector<double> NewParameters)
+{
+	cout << "This function is a virtual function in Transition_Abstract to provide a means to alter Transition parameters." << endl;
+	cout << "The function needs a proper definition for the particular transition, e.g. DCT" << endl;
+	cout << "If you are seeing this message a function definition does not exist for the transition type being updated." << endl;
+}
+
+//=======================================================================
 // Vitural Function - Transition_Fire() - Default definition unless 
 // overridden
 //=======================================================================

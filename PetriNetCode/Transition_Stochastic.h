@@ -24,6 +24,9 @@ public:
 	// Function to print out properties
 	void Transition_Type_Properties();
 
+	// Function to Change Parameters
+	void Change_Transition_Parameters(vector<double> NewParameters);
+
 private:
 	// Distribution Variables
 	char mDistributionCode;

@@ -1475,3 +1475,11 @@ void Petri_Net_Abstract::Change_Transition_Firing_Delay_Time(unsigned int Transi
 	mpTransitions->at(TransitionIndex)->Change_Fixed_Transition_Delay(NewDelayTime);
 	
 }
+
+//========================================================
+// Accessor Function to change Transition Parameters
+//========================================================
+void Petri_Net_Abstract::Change_Transition_Parameters(unsigned int TransitionIndex, vector<double> ParametersVector)
+{
+
+}

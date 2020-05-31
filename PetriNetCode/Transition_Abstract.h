@@ -25,6 +25,7 @@ class Transition_Abstract
 		virtual void Transition_Fire();
 		virtual void Transition_Enabled_Check(double GlobalTime);
 		virtual void Reset_Transition_To_Initial();
+		virtual void Change_Transition_Parameters(vector<double> NewParameters);
 
 		// Public functions common to all derived transition classes
 		void Set_Input_Arcs_Vector(vector<Place*> InputPlaces, vector<unsigned int> InputWeights);

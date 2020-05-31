@@ -84,6 +84,7 @@ public:
 	//====================================
 	void Change_Place_Initial_Marking(unsigned int PlaceIndex, unsigned int NewMarking);
 	void Change_Transition_Firing_Delay_Time(unsigned int TransitionIndex, double NewDelayTime);
+	void Change_Transition_Parameters(unsigned int TransitionIndex, vector<double> ParametersVector);
 	
 protected:
 

@@ -27,6 +27,9 @@ public:
 	// Function to print out properties
 	void Transition_Type_Properties();
 
+	//Redefining a virtual function from the abstract class to provide access to change DCT parameters
+	void Change_Transition_Parameters(vector<double> NewParameters);
+
 private:
 
 	// Private Variables
