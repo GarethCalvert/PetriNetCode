@@ -1481,5 +1481,5 @@ void Petri_Net_Abstract::Change_Transition_Firing_Delay_Time(unsigned int Transi
 //========================================================
 void Petri_Net_Abstract::Change_Transition_Parameters(unsigned int TransitionIndex, vector<double> ParametersVector)
 {
-
+	mpTransitions->at(TransitionIndex)->Change_Transition_Parameters(ParametersVector);
 }

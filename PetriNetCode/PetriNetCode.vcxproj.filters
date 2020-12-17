@@ -77,5 +77,8 @@
     <ClCompile Include="Transition_DC.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="main_LCA_Example.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

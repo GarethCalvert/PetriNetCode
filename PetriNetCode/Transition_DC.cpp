@@ -226,6 +226,16 @@ void Transition_DC::Transition_Type_Properties()
 	}
 
 	cout << endl;
+
+	for (unsigned int i = 0; i < mNumberMarkingPermutations; i++)
+	{
+		temp = to_string(mpConditionalProbabilityValues->at(i));
+		cout << temp << "\t";
+	}
+
+
+
+	cout << endl;
 }
 
 //=======================================================================
@@ -237,5 +247,4 @@ void Transition_DC::Change_Transition_Parameters(vector<double> NewParameters)
 	{
 		mpConditionalProbabilityValues->at(i) = exp(-NewParameters.at(i) * mTransitionTimeStep);
 	}
-
 }
